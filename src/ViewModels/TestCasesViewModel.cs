@@ -698,23 +698,7 @@ namespace TestViewer.ViewModels
 
             tcs.State = TestCaseState.Running;
             ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = "cmd";
-
-            // leave it here for test only
-            // string cmdArgs = "@/k ECHO OFF & exit";
-            string cmdArgs = "@/k ECHO OFF ";
-
-            //if (Environment.Is64BitOperatingSystem)
-            //{
-            //    cmdArgs += @"& call ""C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"" ";
-            //}
-            //else
-            //{
-            //    cmdArgs += @"& call ""C:\\Program Files\\Microsoft Visual Studio 11.0\\VC\\vcvarsall.bat"" ";
-            //}
-            //MessageBox.Show(MsTestHelper.GetCommandPromptPath());
-            //cmdArgs += @"& call """ + MsTestHelper.GetCommandPromptPath() + @""" ";
-            //MessageBox.Show(cmdArgs);
+            psi.FileName = "dotnet";
 
             // set mstest working directory
             // move to create property exact a setting option for it in the future
@@ -727,15 +711,14 @@ namespace TestViewer.ViewModels
 
             Environment.CurrentDirectory = TestResultOutputFolder;
 
-            string resultFile = Environment.UserName + "_" + Environment.MachineName + " " + DateTime.Now.ToString("yyyy-MM-dd hh_mm_ss") + ".trx";
-            cmdArgs += @"& """ + MsTestHelper.GetMsTestPath() + @""" /testcontainer:""" + localTestDllUrl + @""" /test:" + tcs.ID + @" /unique /resultsfile:""" + resultFile + @""" ";
-            if (!SourceTestSettingsUrl.Trim().Equals(string.Empty))
-            {
-                cmdArgs += @"/testsettings:""" + SourceTestSettingsUrl + @"""";
-            }
-            cmdArgs += "& exit";
-
-            psi.Arguments = cmdArgs;
+            string resultFile = System.IO.Path.Combine(
+                TestResultOutputFolder,
+                Environment.UserName + "_" + Environment.MachineName + " " + DateTime.Now.ToString("yyyy-MM-dd hh_mm_ss") + ".trx");
+            psi.Arguments = string.Format(
+                "test \"{0}\" --no-restore --filter \"FullyQualifiedName={1}\" --logger \"trx;LogFileName={2}\"",
+                localTestDllUrl,
+                tcs.ID,
+                resultFile);
             
             psi.WindowStyle = ProcessWindowStyle.Hidden;
             psi.UseShellExecute = false;
@@ -808,7 +791,7 @@ namespace TestViewer.ViewModels
                     LoggerViewModel.Log(string.Format("{0} {1} [{2}].", testID, outCome, "LocalMachine"), logColor);
                 }
 
-                tcs.BriefErrorMessage = tcs.ErrorMessage.Replace("\r", "").Replace("\n", "");
+                tcs.BriefErrorMessage = (tcs.ErrorMessage ?? string.Empty).Replace("\r", "").Replace("\n", "");
 
                 RunTestPass();
             };

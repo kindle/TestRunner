@@ -254,7 +254,7 @@ namespace TestViewer.Utilities
 
             Environment.CurrentDirectory = testResultOutputFolder;
 
-            //const string WorkingDirectory = @"C:\Users\v-bawei\Desktop\Release\haisha\";
+            //const string WorkingDirectory = @"C:\Users\bailin.wei\Desktop\Release\haisha\";
             //const string TestDll = "KinectCodedUITest.dll";
             
             string resultFile = Environment.UserName + "_" + Environment.MachineName + " " + DateTime.Now.ToString("yyyy-MM-dd hh_mm_ss") + ".trx";

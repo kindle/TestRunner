@@ -89,7 +89,7 @@ namespace TestViewer.Views
             this.TestCaseName.ToolTip =
 @"Use keywords to filter test cases, examples: 
 1. [keyword] : smart
-2. [keyword1 & keyword2] : smartglass & v-bawei
+2. [keyword1 & keyword2] : smartglass & bailin.wei
 3. [keyword1 | keyword2] : ShapeGame | speech
 4. [testcasename1,
     testcasename2,
@@ -454,8 +454,14 @@ namespace TestViewer.Views
                     // TOTD add a checkbox on trxviewer page
                     if (true)
                     {
-                        tc.Owner = XmlHelper.GetAttributeValueFromXml(unitTestNode.OuterXml, "/UnitTest/Owners/Owner", "name");
-                        tc.Priority = Int32.Parse(unitTestNode.Attributes["priority"].Value);
+                        if (unitTestNode != null)
+                        {
+                            tc.Owner = XmlHelper.GetAttributeValueFromXml(unitTestNode.OuterXml, "/UnitTest/Owners/Owner", "name");
+
+                            var priorityAttribute = unitTestNode.Attributes["priority"];
+                            int priority;
+                            tc.Priority = priorityAttribute != null && Int32.TryParse(priorityAttribute.Value, out priority) ? priority : 0;
+                        }
                     }
                 }
 

@@ -84,6 +84,11 @@ namespace TestViewer.Utilities
 
         public static XmlNode GetNodeFromTrxById(XmlNode node, string queryString)
         {
+            if (node == null)
+            {
+                return null;
+            }
+
             XmlDocument doc = new XmlDocument();
             doc.InnerXml = node.OuterXml;
             return doc.SelectSingleNode(queryString);

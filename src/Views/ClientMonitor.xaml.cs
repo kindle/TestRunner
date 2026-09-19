@@ -115,7 +115,7 @@ namespace TestViewer.Views
                 HostList.Add(pcName, sp);
 
                 termServ.Server = pcName;
-                termServ.UserName = @"fareast\v-bawei";
+                termServ.UserName = @"fareast\bailin.wei";
                 ((IMsTscNonScriptable)termServ.GetOcx()).ClearTextPassword = "7ujm*IK<";
                 termServ.AdvancedSettings.allowBackgroundInput = -1;
                 termServ.Connect();

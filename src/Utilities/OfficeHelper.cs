@@ -13,7 +13,7 @@ namespace TestViewer.Utilities
     using System.Net.Mail;
     using System.Text;
 
-    using Microsoft.Office.Interop.Excel;
+    //using Microsoft.Office.Interop.Excel;
     using TestViewer.Models;
     using TestViewer.ViewModels;
     using System.Security.Principal;
@@ -32,6 +32,7 @@ namespace TestViewer.Utilities
         /// <param name="TestCasesModelICollectionView">Data source</param>
         internal static void ExportSelectionToExcel(ICollectionView TestCasesModelICollectionView)
         {
+            /*
             Application xlApp = new Application();
 
             if (xlApp == null)
@@ -82,6 +83,7 @@ namespace TestViewer.Utilities
                     i++;
                 }
             }
+            */
         }
 
         #endregion
@@ -90,7 +92,7 @@ namespace TestViewer.Utilities
 
         internal static string ResolveAlias(string inputString)
         {
-            inputString = inputString.Replace("@microsoft.com", "");
+            inputString = inputString.Replace("@lseg.com", "");
 
             var dirEntry = new DirectoryEntry(string.Format("LDAP://{0}", "OU=UserAccounts,DC=fareast,DC=corp,DC=microsoft,DC=com"));
             var searcher = new DirectorySearcher(dirEntry)
@@ -146,7 +148,7 @@ namespace TestViewer.Utilities
             string[] temp = WindowsIdentity.GetCurrent().Name.Split(splitCh, StringSplitOptions.RemoveEmptyEntries);
             if (temp.Length == 2)
             {
-                aliasMail = String.Format("{0}@microsoft.com", temp[1]);
+                aliasMail = String.Format("{0}@lseg.com", temp[1]);
             }
             return aliasMail;
         }
@@ -158,29 +160,29 @@ namespace TestViewer.Utilities
         internal static void SendMail(ICollectionView view, long totalTicks)
         {
             char[] splitCh = { '\\' };
-            var mailFrom = "test@xboxtest.com";
-            var mailCc = "v-bawei@microsoft.com";
+            var mailFrom = "evai.sit@refinitiv.com";
+            var mailCc = "bailin.wei@lseg.com";
             string[] temp = WindowsIdentity.GetCurrent().Name.Split(splitCh, StringSplitOptions.RemoveEmptyEntries);
             if (temp.Length == 2)
             {
-                mailFrom = String.Format("{0}@microsoft.com", temp[1]);
+                mailFrom = String.Format("{0}@lseg.com", temp[1]);
                 if (mailCc.Contains("@"))
                 {
-                    if (!mailCc.Contains(String.Format(",{0}@microsoft.com", temp[1])))
+                    if (!mailCc.Contains(String.Format(",{0}@lseg.com", temp[1])))
                     {
-                        //mailCc += String.Format(",{0}@microsoft.com", temp[1]);
+                        //mailCc += String.Format(",{0}@lseg.com", temp[1]);
                     }
                 }
                 else
                 {
-                    mailCc = String.Format("{0}@microsoft.com", temp[1]);
+                    mailCc = String.Format("{0}@lseg.com", temp[1]);
                 }
             }
 
             var info = new MailInfo();
             // TODO: change to multi styles
             info.MailContent = GetTestResultMailGreen(view, totalTicks);
-            info.MailTo = mailFrom; // "v-bawei@microsoft.com";
+            info.MailTo = mailFrom; // "bailin.wei@lseg.com";
             info.MailFrom = mailFrom;
             info.MailCC = mailCc;
             var countTotal = view.Cast<TestCase>().Count();
@@ -197,7 +199,7 @@ namespace TestViewer.Utilities
             myMail.From = new MailAddress(info.MailFrom);
             myMail.To.Add(info.MailTo);
             //myMail.CC.Add(info.MailCC);
-            //myMail.Bcc.Add("v-bawei@microsoft.com");
+            //myMail.Bcc.Add("bailin.wei@lseg.com");
             myMail.Subject = info.Subject;
             myMail.SubjectEncoding = Encoding.UTF8;
 
@@ -213,11 +215,14 @@ namespace TestViewer.Utilities
                 myMail.Attachments.Add(new Attachment(attachPath));
             }
 
-            var sender = new SmtpClient("smtphost", 25);
+            //var sender = new SmtpClient("smtphost", 25);
+            //var sender = new SmtpClient("tfusnjpscsmtp1.tfn.com", 25);
+            var sender = new SmtpClient("smtp.corp.internal", 25);
+            //todo:check mail sender logic of vah
             sender.UseDefaultCredentials = true;
             //sender.Credentials = new NetworkCredential("test@gmail.com", "test");
             //sender.DeliveryMethod = SmtpDeliveryMethod.Network;
-            //sender.EnableSsl = true;
+            sender.EnableSsl = true;
 
             try
             {
@@ -226,7 +231,15 @@ namespace TestViewer.Utilities
             }
             catch (Exception e)
             {
-                LoggerViewModel.Log(string.Format("Fail to send the report: {0}", e.Message));
+                var innerMessage = e.InnerException == null ? string.Empty : string.Format(" Inner exception: {0}", e.InnerException.Message);
+                LoggerViewModel.Log(string.Format(
+                    "Fail to send the report using SMTP server {0}:{1} from {2} to {3}: {4}.{5}",
+                    sender.Host,
+                    sender.Port,
+                    info.MailFrom,
+                    info.MailTo,
+                    e.Message,
+                    innerMessage));
             }
         }
 

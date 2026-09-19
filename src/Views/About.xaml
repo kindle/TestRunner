@@ -23,7 +23,7 @@
                 Version: <TextBlock x:Name="Version"></TextBlock>
             </TextBlock>
             <TextBlock HorizontalAlignment="Center">
-                Please send feedback to v-bawei@microsoft.com, thanks!
+                Please send feedback to bailin.wei@lseg.com, thanks!
             </TextBlock>
         </StackPanel>
     </Grid>
