@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="TestViewer.Views.StartPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Margin="0">
+    <Grid Margin="0">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
+                <Label FontWeight="Medium"  FontSize="30" VerticalAlignment="Top" HorizontalAlignment="Left">Bailin Studio</Label>
+                <Label FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0, 15, 0, 0">For CodedUI Automation</Label>
+            </StackPanel>
+
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20">
+                <StackPanel.Resources>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Foreground" Value="#6366d4"/>
+                        <Setter Property="TextBlock.TextDecorations" Value="{x:Null}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#7e99ff"/>
+                                <Setter Property="TextBlock.TextDecorations">
+                                    <Setter.Value>
+                                        <TextDecorationCollection>
+                                            <TextDecoration Location="Underline"/>
+                                        </TextDecorationCollection>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Margin="5">
+                    <Hyperlink Click="OpenTrxClick">Open .Trx File...</Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="5,5,5,10">
+                    <Hyperlink Click="LoadTestsClick">Load Test Bits...</Hyperlink>
+                </TextBlock>
+                <!--<TextBlock Margin="5">
+                    <Hyperlink Click="NewProjectClick">New Test Pass...</Hyperlink>
+                </TextBlock>-->
+                <TextBlock Margin="5">
+                    <Hyperlink Click="OpenProjectClick">Create Client...</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10">
+                <!--<TextBlock Margin="5" FontSize="15">
+                    Recent Projects 
+                </TextBlock>-->
+                <ListView Visibility="Hidden">
+                    <ListViewItem>TestPass1</ListViewItem>
+                    <ListViewItem>TestPass2</ListViewItem>
+                </ListView>
+            </StackPanel>
+        </StackPanel>
+        <Image Name="TopRightImage" VerticalAlignment="Top" HorizontalAlignment="Right" Width="97" Height="192"></Image>
+    </Grid>
+</UserControl>

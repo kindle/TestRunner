@@ -1,0 +1,22 @@
+﻿1.Treeview hierarchical binding
+http://blogs.microsoft.co.il/blogs/davids/archive/2009/06/04/hierarchicaldatatemplate-and-treeview.aspx
+
+2.Closeable tab item
+http://geekswithblogs.net/kobush/archive/2007/04/08/CloseableTabItem.aspx
+
+3.Remote Desktop interface
+http://www.codeproject.com/KB/cs/RemoteDesktop_CSharpNET.aspx
+cmd.exe %<SDK bin directory>%\aximp.exe %windir%\system32\mstscax.dll
+This will generate MSTSCLib.dll and AxMSTSCLib.dll.
+Make sure Interop.MSTSCLib.dll and AxInterop.MSTSCLib.dll have been deleted
+in the obj and bin\Debug directories.
+<Reference Include="AxMSTSCLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <SpecificVersion>False</SpecificVersion>
+    <HintPath>dll\AxMSTSCLib.dll</HintPath>
+</Reference>
+<Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+<Reference Include="MSTSCLib">
+    <EmbedInteropTypes>False</EmbedInteropTypes>
+    <HintPath>dll\MSTSCLib.dll</HintPath>
+</Reference>
+4.Remove color in PS: Ctrl+shift+u

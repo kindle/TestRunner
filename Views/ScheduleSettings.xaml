@@ -1,0 +1,87 @@
+﻿<Window x:Class="TestViewer.Views.ScheduleSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Run Settings" 
+        Height="500" 
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowState="Normal"
+        WindowStyle="SingleBorderWindow"
+        UseLayoutRounding="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/SystemColors.xaml"/>
+                <ResourceDictionary Source="/Resources/RoutedUICommands.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource ExitCommand}" Executed="ExitExecute"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="ESC" Command="{StaticResource ExitCommand}"></KeyBinding>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="350"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#BCC7D8"></Grid>
+        <Grid Grid.Row="1" Background="#BCC7D8" ShowGridLines="False">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <Label Height="25" x:Name="LocalIPAddress" Margin="1, 3, 3, 3"></Label>
+            </StackPanel>
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Auto Rerun Times:</TextBlock>
+            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="AutoRerun" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="25" Margin="3">
+                <ComboBoxItem IsSelected="True">No</ComboBoxItem>
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem>3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+                <ComboBoxItem>6</ComboBoxItem>
+            </ComboBox>
+            <TextBlock Grid.Row="3" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Auto Send Email:</TextBlock>
+            <CheckBox Grid.Row="3" Grid.Column="1" x:Name="AutoSendEmail" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3"></CheckBox>
+            <TextBlock Grid.Row="4" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Email To ...:</TextBlock>
+            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                <TextBox x:Name="EmailTo" Height="20" Margin="3" Width="450" HorizontalAlignment="Left"></TextBox>
+                <!--<Button Content="Resolve Alias" Click="ResolveAlias" Height="22" Margin="3"></Button>-->
+            </StackPanel>
+            <TextBlock Grid.Row="5" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Email CC ...:</TextBlock>
+            <TextBox Grid.Row="5" Grid.Column="1" x:Name="EmailCc" Width="450" Height="20" Margin="3" HorizontalAlignment="Left"></TextBox>
+            <TextBlock Grid.Row="6" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Email Subject:</TextBlock>
+            <TextBox Grid.Row="6" Grid.Column="1" x:Name="EmailSubject" Height="20" Margin="3"></TextBox>
+            <TextBlock Grid.Row="7" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Top">Email Signature:</TextBlock>
+            <TextBox Grid.Row="7" Grid.Column="1" x:Name="EmailSignature" Margin="3" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible">Test Team</TextBox>
+        </Grid>
+        <Grid Grid.Row="2" Background="#475B7e" ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" HorizontalAlignment="Right" Width="80" Margin="5" Click="RunButtonClick">Run</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Left" Width="80" Margin="5" Command="{StaticResource ExitCommand}">Cancel</Button>
+        </Grid>
+    </Grid>
+</Window>

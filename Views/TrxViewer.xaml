@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="TestViewer.Views.TrxViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vc="clr-namespace:TestViewer.ValueConverters"
+             xmlns:vm="clr-namespace:TestViewer.ViewModels">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ResourceDictionary.xaml"/>
+                <ResourceDictionary Source="/Resources/SystemColors.xaml"/>
+                <ResourceDictionary Source="/Resources/RoutedUICommands.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <vm:TrxViewModel x:Name="TrxViewModel"></vm:TrxViewModel>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.CommandBindings>
+            <CommandBinding Command="{StaticResource ViewTestResultsDetailsForTrxViewerCommand}" Executed="ViewTestResultsDetailsForTrxViewerExecute"></CommandBinding>
+            <CommandBinding Command="{StaticResource SendNameToFilterCommand}" Executed="SendNameToFilterExecute"></CommandBinding>
+        </Grid.CommandBindings>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <CheckBox Click="ToggleFailedItems" Margin="5, 0, 5, 0">Failed</CheckBox>
+            <CheckBox Click="ToggleInconclusiveItems" Margin="0, 0, 5, 0">Inconclusive</CheckBox>
+            <TextBlock Text="{Binding ElementName=trxList, Path=Items.Count, Converter={StaticResource IntToStringConverter}}"></TextBlock>
+            <TextBlock x:Name="checkCountText" Margin="5,0,0,0"></TextBlock>
+            <!--<Button Click="SendMail">Send Mail</Button>-->
+        </StackPanel>
+        <ListView x:Name="trxList" ItemsSource="{Binding TrxModelICollectionView}" Grid.Row="1">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding Path=IsChecked}"></Setter>
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="AllCheckBox" HorizontalAlignment="Stretch" Click="AllCheckBoxClick"></CheckBox>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Stretch" IsChecked="{Binding IsChecked}" Click="SingleCheckBoxClick"></CheckBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" x:Name="ResultColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Result" Width="{Binding ElementName=ResultColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="18" Source="{Binding State, Converter={StaticResource StringToBitmapImageConverter}}"></Image>
+                                    <TextBlock Text="{Binding State}" Margin="5,0,0,0"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="350" x:Name="TestNameColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Test Name" Width="{Binding ElementName=TestNameColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="70" x:Name="OwnerColumn" DisplayMemberBinding="{Binding Owner}">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Owner" Width="{Binding ElementName=OwnerColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" x:Name="PriorityColumn" DisplayMemberBinding="{Binding Priority}">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Priority" Width="{Binding ElementName=PriorityColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" x:Name="DurationColumn" DisplayMemberBinding="{Binding Duration, StringFormat={}{0:mm:ss}}">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Duration" Width="{Binding ElementName=DurationColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" x:Name="StartTimeColumn" DisplayMemberBinding="{Binding StartTime, StringFormat={}{0:MM-dd hh:mm:ss}}">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Start Time" Width="{Binding ElementName=StartTimeColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" x:Name="EndTimeColumn" DisplayMemberBinding="{Binding EndTime, StringFormat={}{0:MM-dd hh:mm:ss}}">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="End Time" Width="{Binding ElementName=EndTimeColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="500" x:Name="ErrorMessageColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Error Message" Width="{Binding ElementName=ErrorMessageColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding BriefErrorMessage}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="View Test Results Details" Command="{StaticResource ViewTestResultsDetailsForTrxViewerCommand}"></MenuItem>
+                    <MenuItem Header="Send checked items to filter" Command="{StaticResource SendNameToFilterCommand}"></MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+        </ListView>
+    </Grid>
+</UserControl>
+

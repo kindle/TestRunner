@@ -1,0 +1,73 @@
+﻿<Window x:Class="TestViewer.Views.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:TestViewer.Views"
+        Title="Settings" 
+        Height="500" 
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowState="Normal"
+        WindowStyle="SingleBorderWindow"
+        UseLayoutRounding="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/SystemColors.xaml"/>
+                <ResourceDictionary Source="/Resources/RoutedUICommands.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource ExitCommand}" Executed="ExitExecute"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="ESC" Command="{StaticResource ExitCommand}"></KeyBinding>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="180"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#BCC7D8"></Grid>
+        <Grid Grid.Row="1" Background="#BCC7D8" ShowGridLines="False">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Test Bits Path:</TextBlock>
+            <v:FolderBrowserBox Grid.Row="0" Grid.Column="1" x:Name="testBitsFolder" Height="20" Margin="3"></v:FolderBrowserBox>
+            <TextBlock Grid.Row="1" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Test Results Path:</TextBlock>
+            <v:FolderBrowserBox Grid.Row="1" Grid.Column="1" x:Name="testResultOutputFolder" Height="20" Margin="3"></v:FolderBrowserBox>
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Local IP Address:</TextBlock>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                <Label Height="25" x:Name="localIPAddress" Margin="1, 3, 3, 3"></Label>
+                <Button Height="20" Width="120" Margin="3" Click="SetAsServer">Set as Server</Button>
+            </StackPanel>
+            <TextBlock Grid.Row="3" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Server IP Address:</TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Height="20" x:Name="serverIPAddress" Margin="3"></TextBox>
+            <TextBlock Grid.Row="4" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Server Port:</TextBlock>
+            <TextBox Grid.Row="4" Grid.Column="1" Height="20" x:Name="serverPort" Margin="3">2222</TextBox>
+            <TextBlock Grid.Row="5" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">TestSettings file:</TextBlock>
+            <v:FileInputBox Grid.Row="5" Grid.Column="1" x:Name="testSettings" Height="20" Margin="3" Filter="TestSettings File|*.testsettings"></v:FileInputBox>
+        </Grid>
+        <Grid Grid.Row="2" Background="#475B7e" ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" HorizontalAlignment="Right" Width="80" Margin="5" Click="SaveButtonClick">Save</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Left" Width="80" Margin="5" Command="{StaticResource ExitCommand}">Cancel</Button>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,24 @@
+﻿1.In VS 2012, they have rearchitected the Unit Test Framework in order to make it more extensible and scalable. 
+As part of this work, they have deprecated Test results viewer and the trx file format. 
+If you run new unit tests, trx file is not generated and therefore it is not shown in the Test Results Window.
+
+Bailin Studio will generate it //todo: need to merge all the .trx files
+
+2.Sort test cases, using weird "Traits"/project:"support" to filter test cases
+Bailin Studio provides priority filter and text filter
+
+fuzzy filter introduction
+A & B
+A | B
+[ignore]
+
+3.Lab run rerun
+Bailin Studio provides auto rerun for specific times
+and will send a email results to specific alias
+
+todo: UI need to be optimized
+
+*4. Save more time
+multi-pc running test cases at the same time
+todo: not stable
+

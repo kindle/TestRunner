@@ -1,0 +1,335 @@
+﻿V1 Goal ====================================================
+Done.1).PC Version
+Half done.2).Distributed PCs Version
+Investigating...3).Multiple User Distributed PCs Version
+
+
+V1 bugs ====================================================
+3.can rerun failed test case for certain times
+5.can generate report
+6.can send report by email 
+*7.can merge reports between pass and rerun pass test result
+8.can schedule tests by time
+17.add tool bar show for win7 /should be a cube in taskbar show basic infor of the app
+*28.when running the case should disable all filter controls /user can't change it when running , how about hide the test depot when running
+4.can set locale & environment /can set command via tcp - send cmd to client
+35.run batch on target client, say setx /m lynxtestlocal en-us -- how about run specific script on clients, so no need to copy the batch to clients
+*16.can filter Environment & LocaleGroup()
+37.bottom tab should raise higher a litter bit like the vs2010
+39.add a test pass view and think about the idea -- should be the start page/recent test passes
+40.can change client description on treeview node
+41.release/dispose resources after loading assembly or exiting app -- deal with the multi-thread
+43.draft a doc exlaiming my goal: no inconclusive case is running, for example
+45.add test pass history on start page(user control)
+46.add operation guide on start page(user control)
+24.remote desk top manager should scale to fit container. - this is really hard
+19.disable hittest in windowsformhost - not sure
+51.Client Monitor/Test View/... should bind to a viewmodel and should be only one text source
+52.test bit should be copied to .exe folder before running
+54.add remote desktop controller for client view
+56.should be able to load test in test view according to test environment, say zune.net, xbox...
+58.add new tp/open tp/recent tp (test pass) feature in menu file
+59.add new tp/open tp on left up, recent tp on left bottom of start page
+60.a test pass should meet the following requirements:
+	1) has a tp name
+	2) has a tp workspace zune.net or xbox mow
+	2.1) dll location
+	2.2) .tp save location
+	5) rerun times for failed test cases
+	7) tp alias[]
+	3) tp environment b.aegis/prod for zune.net; qfe.vint/rtm.vint for xbox mow
+	4) tp locale for both zune.net & xbox mow 
+	6) is send report to specific alias
+	8) save test pass result
+	9) load test pass result
+	10) run test cases in test pass result for several times
+	11) can change test cases descriptions in test pass
+	12) can set rerun failed test cases internal (immediately or after 5 minites)
+	*13) can run multiple test pass at a time
+	*14) rerun same test pass can view latest test pass result say recent 5 times
+
+62.add template concept template list/zune/xbox logo /template desc/other options
+63.test view add group by
+64.should clean TestResult before it becomes too big , or add warning when the folder size is too big
+69.add button can stop or pause test pass
+
+
+New bugs =====================================================================================
+fixed.67.Mainwindow binding textbox value, INotifychanged + ,element=root, x:name=root
+v-next 16.add database connection default is disconnected, recording recent test running by alias, testname, time
+v-next95.custom test property colum should not be seen if costum text is empty, thinking use binding to solve this issue /width=0 and headercontainerstyle use setter
+v-next21.add analysis feature ; this should be according to database data
+won't fix.25.don't forget to close the watcher when tests is done ;filesystemwatcher is never used
+NotRepro.101.Priority with the following format can't be detected:
+[TestMethod, Priority(99), Owner("v-haiyi")]
+[Description("Click to Chat full flow verification for unregistered user choose a non-force sign in Cabinet Dropdown issue and fill in contact information manually")]
+public void C2Chat_FullFlow_CabinetDropdown_UnregisterUser_NotSignIn_ValidInputs()
+empty TestMethod will interfer reflection test case count will go wrong
+[Priority(99)]
+[Owner("v-haiyi")]
+change to this will fix it. investigating...
+
+3.Add test pass and save test pass in .tp file
+4.find a icon for open/new project
+5.add test pass list
+6.inspect code style
+20.add graphic run test progress in test monitor useful for verylong list (progress bar)
+27.xmlreader/xmlwriter/xmlpathreader
+
+35.write a log to disk when this app crashes
+40.use status bar to show run tests progress...
+41.add title bar for tab on the right
+42.add icon button for tab on the right
+!!43.learn mvvm and refactor the code for the second time
+44.let someone good at wpf do a code review
+45.ppt
+46.write a good about tpms
+47.write a read me
+48.marketing
+49.optimize the UI, especailly in server 2008, win7,win8 is ok
+52.create a mstesthelper, testcaseviewmodel and clienthelper calls it when run test cases
+57.can drag tab to windows desktop like vs2010
+59.investigate why testviewer.exe still in task bar when closed -- this might be a background process/thread
+61.machine list should order by (free and busy)/disconnected
+
+63.can add/delete machines for treeview node, but operations are available only when not running test cases
+
+71.add tooltip busy/free/disconnected for client machines view
+73.add text after machine name describing what is the machine is doing now, say: copying test bits/Run ShapGameInstallationTest/
+76.when loading non-codedui dll, should handle the exception
+77.add a .trx merger
+
+38.Client machines tab should be shown as default
+75.add close button for tab on the right
+84.when launch it from a share and close a exception will throw
+89.add eiffel image to title
+93.custom test property should be saved as isolated data /it depends
+94.use resource to binding display text say foo studio
+104.add a refresh button on test depot to reload dll
+
+119.recent projects should list all loaded tests(& exists), clicking recent proj should not copy dll, and open it directly
+121.can't run data driven test say support.test.VerifyAllTestUrlsReturn200
+123.add a scenario word or ppt accumulate scenarios
+124.show copy progress and machine name tree item(distributed)
+125.export xml for test result, so 3rd part exe can make a custom email format
+126.filter should support & | - : remove exclusive
+55.use machinename instead of client index(use guid in further update)
+97.**$ command should be in TcpClientHelper and TcpServerHelper only, should refector it
+22.use codebase to describe location of codedui.dll
+26.add a link so user can open workingdirectory directory when clicking it.
+128.test result output folder, default should be the same folder where the .exe is.
+130.when a connected client closed should kill testviewer.exe and server should show it's disconnected state in treeview
+131.add a timeout state for test case result
+133.show total progress in tray
+135.one client can only connect to server once connect 4 times to make server full is wrong
+136.treeview menu should be disabled, say, if a machine is disconnected should not be able to booted.
+144.create a sql server to record test runs for future summarize
+148.copy office related dll out in bin in solution level
+150.add control in settings for shellexecute, ...
+*152.checked item count is not accurate in trx viewer
+155.avoid using $ split use full match of ***$ sub string index to get message, send 1 message each time
+156.tcpserver239 testId could be empty when not generated, all the rest will .endwith "" so all will be marked as failed
+157.when running test pass in Test Monitor, should be able to add failed test cases in pending list to rerun
+158.Add copy test name context menu for test monitor
+159.when throw exception should save .trx file in local disk for app.cs
+160.Add client infor before sending the command to client
+161.should be able to catch TargetInvocationException before Exception -VS bug
+162.when throw exception should save log file in local disk for app.cs
+163.should be able to open multi .trx file at the same time
+164.the switch tc.state should be abstracted to a common method
+165.add a common method for ... too long text
+166.if server ip is empty, creating server will throw exception
+167.can specify which files to copy, since usually the test bits folder is too big in \\edge-svcs\release\...\testbits
+168.add a tooltip for filter to tell how to use it
+169.[regression]ignore test case should be gray text
+170.[regression]when result file is not generated , all ran tests info will be updated wrong
+171.view test result images
+172.file transfer in tcp 
+173.add filter text for test result viewer
+174.should give a option to show owner & priority attributes that belongs to unittest nodes to optimize loading speed
+175.make sure not be able to create server twice
+176.OfficeHelper should separate getHtmlcontent and send email
+177.OfficeHelper should send email in another thread
+178.should add a stateManager for local and client run result tc.state : trxload, runlocal, runclient
+179.should have an email setting, with default text
+	- email to
+	- email cc
+	- email title
+	- email warning message
+	- email style
+	- email regards
+	- email footer
+	- sort order by failed first or passed first
+180.add a 38% in toolbar square, total-pending/total
+181.add client and clientinfo(ie version) for local run
+182.add mstest environment detection for both 10.0 and 11.0
+184.copy testsettings to local when run locally
+185.afte a run, should be able to rerun specific tests and resend report
+186.add a function: right click a client can set it as free
+187.TcpClientHelper.UpdateTestBits and MainWindow.xaml.cs.LoadTestsForUserControl have similar code, should merge for copying setting file
+188.
+
+	
+Working on bugs -----------------------------------------------------------
+
+33.add a tool can transfer .trx file to outlook mail draft
+99.when connect 2 clients the second copy test bits twice, should investigate on that
+**18.add abort/stop/resume all running test case button
+74.add RunSelection/RunSelectionOnClients/Refresh button on TestDepot caption
+105.add logic for auto-detect custom test property checkbox and custom text boxes enabled/disabled
+106.add textblock show where current source/testbits is, and can click to open the folder
+37.Test Depot should be hidden when no dll is loaded
+12.add rerun support for test pass monitor page
+32.add rerun function for testmonitor
+72.when client closed, should show disconnected on server treeview
+33.add right click menu for treeview connect
+15.send mail to alias when completed - add options: auto/manual
+
+
+
+Fixed list 1 =============================================================
+2012.07.27.fixed.2.remove copying the 2 bat files
+2012.07.28.fixed.8.add default name for test pass
+2012.07.29.fixed.7.rerun should clean test cases in testpassmonitor
+2012.07.30.fixed.14.read test result from rtx file to test monitor page
+2012.07.31.fixed.17.add execute time for each test case in test monitor
+2012.08.02.fixed.9.add a output window to show log -> view test results details tab
+2012.08.02.fixed.19.add a log tab on the right -> view test results details tab
+2012.08.02.fixed.13.test case priority should get from dll not hard coded
+2012.08.04.fixed.53.move testmachineviewmodel to respected file
+2012.08.04.fixed.54.when finished should change machine state from busy to free
+2012.08.04.fixed.29.distributed funtion is the most important(think of using wcf) use tcpclient instead
+2012.08.04.fixed.36.add a tab shows client machines on the right
+2012.08.04.fixed.56.make sure when running multi-tests the UI in server won't freeze - use observablecollectionwrapper to solve this
+2012.08.04.fixed.39.client and Studio should be in one app
+2012.08.12.fixed.11.add run test by category say under some namespace - should use testcase.id instead of testcase.name for matching
+2012.08.13.fixed.80.export selected tests to excel in test depot
+dupe80.65.export selected test cases to txt/exl file
+2012.08.13.won't fix.81.export selected tests to txt in test depot
+2012.08.13.fixed.64.filter should search full name of the test case
+2012.08.13.fixed.83.split in the middle between test monitor and test depot is too thin make it wider 
+2012.08.13.fixed.66.test case list should order by description
+2012.08.13.fixed.85.if the test case description is too long, replace the "\r\n" with " ", avoid odd lookings
+2012.08.14.fixed.78.specify netshare first -> debugger copy test bit to net share
+	1)PC copy netshare to local -> test
+	2)distributed PC -> copy netshare to local -> test
+2012.08.14.fixed.86.should load dll after the copy is completed
+2012.08.15.fixed.92.Add dynamic test property in test depot, for Kinect it's CaseID but in MOW it's JobId, Locale... TestProperty1, TestProperty2, TestProperty3...
+2012.08.16.fixed.102.when copy files using xcopy the sourceurl and desturl should be quoted using ""
+2012.08.16.fixed.100.should detect costum test property automatically by using rate /top 3
+2012.08.16.fixed.103.add is auto-detect custom test property checkbox
+2012.08.16.fixed.107.filter string should contain all: ID, Description, t.Owner, CustomTestProperty1,2,3
+2012.08.20.fixed.110.[ignore] tests should show different color /darkgray
+2012.08.21.won't fix.98.name filter in test depot has 2 lines by default, should be 1 line by default/ this is a vs2008 style issue
+2012.08.21.fixed.108.exported excel worksheet should have title
+2012.08.21.fixed.112.should be able to select text in test result details window
+2012.08.22.fixed.90.use Eiffel Studio? /no use Fustian Studio in honor to the song fukua //too bad chang it to Elfoo Studio
+2012.08.22.fixed.114.should trim filter text
+2012.08.22.fixed.115.filter should support A & B
+2012.08.22.fixed.116.filter should support A | B
+2012.08.23.fixed.117.when inputing 'ignore' in filter, should get ignore test cases
+2012.08.23.fixed.1.deal with the [ignore] tag case in the list /should not run ignored tests
+2012.08.23.fixed.122.should avoid running empty list
+2012.08.23.fixed.118.should load assembly only once in testcasesview model
+2012.08.23.fixed.113.status bar on the bottom should show "Loading..." when loading dll
+2012.08.23.fixed.87.show copy progress in status bar(local) 
+2012.08.23.fixed.88.avoid the test results viewer title being too long/limited to 20 charactors
+2012.08.27.fixed.127.add a fuzzyqueryhelper to abstract method
+2012.08.27.fixed.111.there should be an excelhelper to abstract the methord /how about officehelper
+2012.08.28.fixed.23.use working directory to describe the location of testresults file location / use test result output folder
+2012.08.28.fixed.24.add tool/options or testpass/settings for Item23 (browser folder)/ use Tools/Settings
+2012.08.28.fixed.10.can set testresult output path, 
+2012.08.29.fixed.69.add a tool for easily setting the server ip and port
+2012.09.18.fixed.91.limit max clients to 4
+2012.09.18.fixed.62.save machine name as isolated file for disconnected machines
+2012.09.18.fixed.60.add a lightgray ico for computer that has been a client machine but not connected(not busy/free) :disconnected
+2012.09.18.fixed.58.for clients tab, first it's a rdt man, then show the free/busy state
+2012.09.18.fixed.34.integrate rdm 
+2012.09.24.fixed.51.logger should be on the left
+2012.09.24.fixed.96.add a log user control on left bottom, use a splitter between log and test monitor
+2012.09.27.fixed.129.add a tool to get local machine ip easily - or show local ip in setting window
+2012.10.02.fixed.138.add time hh:mm:ss tt to output logger
+2012.10.02.fixed.50.when run tests on client machines:
+	fixed.1)server marked client as Buzy
+	fixed.2)server tell clients where to copy test bits
+	fixed.3)clients copy test bits locally from the url
+	fixed.4)clients run test case
+	fixed.5)clients return test results to server
+	fixed.6)server marked client as free
+2012.10.03.fixed.143.[regression]can't run in local machine - not set default output folder - add double \" between testcontainer value
+2012.10.03.fixed.145.deal with result file not generated case for local run and client run
+2012.10.03.fixed.146."copy file error" shows when server didn't share the folder, client should send error message to server
+2012.10.03.fixed.141.failed test in test monitor because of the tcp failure should not use running state - server will get an unknown error.
+2012.10.03.fixed.142.[regression]can't see test result in server test monitor right click
+2012.10.03.fixed.140.error message in test monitor should have no wrap
+2012.10.03.fixed.79.studio should able to detect net access failure and give a alert - client access shared folder failed will send a message and log
+2012.10.04.fixed.139.scroll bar in logger should go to bottom automatically
+2012.10.04.fixed.147.log message can be colorful, say green pass, red failed, orange inconclusive
+2012.10.04.fixed.28.readxml to object including : testcase name/outcome/duration/starttime/endtime/message/resultfile.png/
+2012.10.04.fixed.149.add check box before client treeview, only checked client will run the tests
+2012.10.04.fixed.137.Log message should be at a global level, would create something like a log controller
+2012.10.04.fixed.151.add right click remove all for logs
+2012.10.04.fixed.132.add a client name/ie version/os version on test result grid - remove ie version
+2012.10.04.fixed.68.change testviewer to Fustian(TPMS) Studio /used to name it Foo as a nick name /how about Elfoo Studio - use Eiffel studio
+2012.10.05.fixed.134.for .trx reader it should can send name/fullname/... there should be a option - use name only since no fullname in .trx file
+2012.10.05.fixed.120.need a .trx reader, can select test cases and send their names to filter
+2012.10.05.fixed.30.capable of reading .trx file
+2012.10.05.fixed.82.should be able to sort by clicking test deport listview header
+2012.10.09.fixed.154.add check all the failed test cases checkbox in trx viewer
+2012.10.16.fixed.153.add priority/owner to trx viewer
+2012.10.17.fixed.31.transfer .trx file to mail and can send it to specific alias
+2012.10.18.won't fix.109.exported excel worksheet should be filtered by column title - this should not be a problem since list view and sort by clicking header now
+2012.10.18.fixed.70.add os/bits for test monitor
+2012.12.26.fixed.183.resource.xml is not copied to out folder - add /testsettings:...*.testsettings
+
+
+
+
+
+
+Fixed list 2 =============================================================
+fixed.*9.can get test case result, say, exitcode
+fixed.15. there should be only 2 status for a test run: Failed Or Passed
+    the inconclusive test case is either should not be ran case or Failed case
+fixed.42.add commandbindings for menu
+fixed.*14.use one datasource to maintain. mainly use TestCasesViewModel as datasource
+fixed.20.send messages from Server to clients
+fixed.21.copy files from server to clients - change to copy file from a share server specified to clients
+fixed.44.add user control to make the mainview looks briefly--done TestMonitor/TestResultsDetails/StartPage...
+
+Fixed list 1 =============================================================
+Fixed.20110918.1.Reflection test list
+Fixed.20110921.10.can check/uncheck all test cases
+Fixed.20110921.2.can run tests one by one
+Fixed.20110921.13.can filter test case in list by name and priority
+Fixed.20111008.18.add rdtmanager to observe clients running state
+Fixed.20111008.11.check single test, all checkbox should change respectively
+Fixed.20111009.23.show test case count of listview
+Fixed.20111010.26.mvvm
+Fixed.20111010.25.must be a singleton app
+Fixed.20111011.27.when filter should uncheck all checkboxes
+Fixed.20111012.23.test cases selected 
+Fixed.20111012.29.associated listview IsSelected with IsChecked
+Fixed.20111013.30.add treeview for client explorer
+Fixed.20111013.32.add expander fold/unfold multi-textbox can fill string split by , or space to filter test case names
+Fixed.20111014.36.change menu style
+Fixed.20111014.38.add view/client explorer/Test view and associate with tabitems
+Fixed.20111014.34.add menu for mainwindow view
+Fixed.20111014.12.use image to show testcasescheduled status
+Fixed.20111017.47.add a closeable tabItem for tabControl
+Fixed.20111017.31.bind treeviewitems by using mvvm
+Fixed.20111019.50.when filtering test case names if all names are '/r/n' should be ignored
+Fixed.20111019.48.click treeview show client monitor window on left
+Fixed.20111019.49.View click specific view should selected monitor windows respectively if exist
+Fixed.20111019.53.user should be able to select the test bit that are going to be run
+Fixed.20111019.55.deal with x64/x86 when run .bat file
+Fixed.20111022.57.verify the selected coded ui dll is valid
+Fixed.20111022.73.should support xbox test cases
+Fixed.20111025.61.add Ctrl+N for New Test Pass menu command
+Fixed.20111025.66.create new test pass view
+Fixed.20111025.67.optimize the system colors and layout of MainView and NewTestPass
+Fixed.20111025.68.optimize p0/p1/p99/exclusive filter algorithm
+Fixed.20111026.70.Resource should be a app level resource
+Fixed.20111026.65.there should be a place for storing system colors
+Fixed.20111026.71.press esc to exit New Test Pass View
+Fixed.20111026.72.there should be no logo icon in test pass view 

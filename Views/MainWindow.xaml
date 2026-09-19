@@ -1,0 +1,374 @@
+﻿<Window x:Class="TestViewer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TestViewer.ViewModels"
+        Title="Bailin Studio" 
+        Height="768" 
+        Width="1024" 
+        x:Name="root"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ResourceDictionary.xaml"/>
+                <ResourceDictionary Source="/Resources/SystemColors.xaml"/>
+                <ResourceDictionary Source="/Resources/RoutedUICommands.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.DataContext>
+        <vm:TestCasesViewModel x:Name="testCasesViewModel"></vm:TestCasesViewModel>
+    </Window.DataContext>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource NewTestPassCommand}" CanExecute="CanNewTestPassExecute" Executed="NewTestPassExecute"></CommandBinding>
+        <CommandBinding Command="{StaticResource SettingsCommand}" Executed="SettingsExecute"></CommandBinding>
+        <CommandBinding Command="{StaticResource RunSelectionCommand}" Executed="RunSelectionExecute"></CommandBinding>
+        <CommandBinding Command="{StaticResource RunSelectionOnClientsCommand}" Executed="RunSelectionOnClientsExecute"></CommandBinding>
+        <CommandBinding Command="{StaticResource ExportSelectionToExcelCommand}" Executed="ExportSelectionToExcelExecute"></CommandBinding>
+        <CommandBinding Command="{StaticResource RemoveAllLogsCommand}" Executed="RemoveAllLogsExecute"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="F5" Command="{StaticResource RunSelectionCommand}"></KeyBinding>
+        <KeyBinding Gesture="Ctrl+Shift+N" Command="{StaticResource NewTestPassCommand}"></KeyBinding>
+    </Window.InputBindings>
+    <Grid Background="{StaticResource MainGridBackgroundBrushKey}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="400"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Menu IsMainMenu="True" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource MainMenuBackgroundBrushKey}">
+            <MenuItem Header="_File">
+                <!--<MenuItem Header="New">
+                    <MenuItem Header="Test Pass..." Command="{StaticResource NewTestPassCommand}"></MenuItem>
+                </MenuItem>-->
+                <MenuItem Header="Open">
+                    <MenuItem Header="Test result file..." Click="OpenTestResultFile"></MenuItem>
+                </MenuItem>
+                <Separator />
+                <!--<MenuItem Header="Import"></MenuItem>
+                <MenuItem Header="Export..."></MenuItem>
+                <Separator />
+                <MenuItem Header="Recent Test Pass">
+                    <MenuItem Header="1. Test Pass 1"></MenuItem>
+                    <MenuItem Header="2. Test Pass 2"></MenuItem>
+                    <MenuItem Header="3. Test Pass 3"></MenuItem>
+                    <MenuItem Header="4. Test Pass 4"></MenuItem>
+                </MenuItem>
+                <Separator />-->
+                <MenuItem Header="Exit" Click="MenuItemExitClick"></MenuItem>
+            </MenuItem>
+            <!--<MenuItem Header="_Edit">
+                <MenuItem Header="Add TestPass"></MenuItem>
+                <MenuItem Header="Add TestMachine"></MenuItem>
+            </MenuItem>-->
+            <MenuItem Header="_View">
+                <MenuItem Header="_Client Explorer" Click="MenuItemClientExplorerClick">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/TabClientExplorer.ico" Height="18" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Test View" Click="MenuItemTestCaseExplorerClick">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/TabTestCaseView.ico" Height="18" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <!--<MenuItem Header="_Log Viewer" Click="MenuItemTestPassExplorerClick">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/TabTestPassView.ico" Height="18" />
+                    </MenuItem.Icon>
+                </MenuItem>-->
+                <Separator />
+                <MenuItem Header="Start Page" Click="MenuItemStartPageClick"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="Settings..." Command="{StaticResource SettingsCommand}"></MenuItem>
+                <!--<MenuItem Header="Tool Group 1">
+                    <MenuItem Header="Tool 1" IsCheckable="True"></MenuItem>
+                    <MenuItem Header="Tool 2" IsCheckable="True"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Tool Group 2"></MenuItem>-->
+            </MenuItem>
+            <MenuItem Header="Te_st">
+                <MenuItem Header="Create Server" Click="CreateServer"></MenuItem>
+                <MenuItem Header="Create Client" Click="CreateClient"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="About Bailin Studio" Click="About" />
+                <!--<Separator />
+                <MenuItem Header="View Help" />-->
+            </MenuItem>
+        </Menu>
+        <Grid x:Name="LeftGrid" Grid.Row="1" Grid.Column="0" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="33" MinHeight="33"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TabControl x:Name="MonitorWindowsContainer" Grid.Row="0" Grid.Column="0" Margin="3" Padding="2"/>
+            <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#2b3c59" ShowsPreview="true" ResizeDirection="Rows" Height="4"/>
+            <TabControl x:Name="OutputContainer" Grid.Row="1" Grid.Column="0" Margin="3" Padding="0" TabStripPlacement="Bottom">
+                <TabItem>
+                    <TabItem.DataContext>
+                        <vm:LoggerViewModel x:Name="loggerViewModel"></vm:LoggerViewModel>
+                    </TabItem.DataContext>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" MouseLeftButtonDown="FocusOutput">
+                            <Image Height="18" Source="/Resources/TabTestPassView.ico" />
+                            <TextBlock Text="Log Viewer" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <ScrollViewer x:Name="loggerWrapper" Background="White" Width="Auto" Height="Auto" BorderBrush="#2b3c59">
+                        <ItemsControl Padding="5" x:Name="logger" ItemsSource="{Binding LogsModelICollectionView}">
+                            <ItemsControl.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Remove all logs" Command="{StaticResource RemoveAllLogsCommand}"></MenuItem>
+                                </ContextMenu>
+                            </ItemsControl.ContextMenu>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBox BorderThickness="0" HorizontalAlignment="Stretch" IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Message}" Foreground="{Binding Path=MessageColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"></TextBox>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <GridSplitter Grid.Row="1" Grid.Column="0" Background="#2b3c59" Width="2" ShowsPreview="true" HorizontalAlignment="Right"></GridSplitter>
+        <TabControl x:Name="ExplorerContainer" Grid.Row="1" Grid.Column="1" Margin="0" Padding="0" TabStripPlacement="Bottom">
+            <TabItem Visibility="{Binding ClientVisibility, ElementName=root}">
+                <TabItem.DataContext>
+                    <vm:TestMachinesViewModel x:Name="testMachinesViewModel"></vm:TestMachinesViewModel>
+                </TabItem.DataContext>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="18" Source="/Resources/TabClientExplorer.ico" />
+                        <TextBlock Text="Client Explorer" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <DockPanel Background="{StaticResource TabItemTitleBackgroundBrushKey}" Grid.Row="0">
+                        <TextBlock Margin="3, 3, 5, 3" Foreground="White" DockPanel.Dock="Right">X</TextBlock>
+                        <TextBlock Margin="3, 3, 0, 3" Foreground="White" DockPanel.Dock="Left">Client Explorer</TextBlock>
+                    </DockPanel>
+                    <TreeView x:Name="TestMachinesTreeView" TreeViewItem.Selected="TreeViewSelected" BorderThickness="0"
+                              ItemsSource="{Binding TestMachinesModel}"
+                              Visibility="{Binding ClientVisibility, ElementName=root}"  Grid.Row="1">
+                        <TreeView.Resources>
+                            <ContextMenu x:Key ="RootContext" StaysOpen="true">
+                                <MenuItem Header="Add a machine"/>
+                                <Separator/>
+                                <MenuItem Header="Connect all"/>
+                                <MenuItem Header="Disconnect all"/>
+                            </ContextMenu>
+                            <ContextMenu x:Key="SingleMachineContext" StaysOpen="true">
+                                <MenuItem Header="Connect machine" Click="ShowRemoteDesktop"/>
+                                <MenuItem Header="Disconnect machine" Click="DisconnectMachine"/>
+                                <MenuItem Header="Remove machine"/>
+                                <Separator/>
+                                <MenuItem Header="Full screen"/>
+                            </ContextMenu>
+                        </TreeView.Resources>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding IsChecked}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,3,0"></CheckBox>
+                                    <Image Height="18" Source="{Binding State, Converter={StaticResource StringToBitmapImageConverter}, ConverterParameter=ClientTreeView}"></Image>
+                                    <TextBlock Text="{Binding Name}" Margin="5,0,5,0" VerticalAlignment="Center"></TextBlock>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="18" Source="/Resources/TabTestCaseView.ico" />
+                        <TextBlock Text="Test Explorer" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <DockPanel Background="{StaticResource TabItemTitleBackgroundBrushKey}" Grid.Row="0">
+                        <TextBlock Margin="3, 3, 5, 3" Foreground="White" DockPanel.Dock="Right">X</TextBlock>
+                        <TextBlock Margin="3, 3, 0, 3" Foreground="White" DockPanel.Dock="Left">Test Explorer</TextBlock>
+                    </DockPanel>
+                    <Grid x:Name="TestCaseContainer" Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <ToolBarTray IsLocked="True" Visibility="Collapsed">
+                            <ToolBar>
+                                <Button ToolBar.OverflowMode="Never">
+                                    <Image Width="20" Height="20" Source="/Resources/F5.png"></Image>
+                                </Button>
+                                <Button ToolBar.OverflowMode="Never">
+                                    <Image Width="20" Height="20" Source="/Resources/F5.png"></Image>
+                                </Button>
+                                <Button ToolBar.OverflowMode="Never">
+                                    <Image Width="20" Height="20" Source="/Resources/F5.png"></Image>
+                                </Button>
+                            </ToolBar>
+                        </ToolBarTray>
+                        <Expander Grid.Row="0">
+                            <Expander.Header>
+                                <TextBlock Text="{Binding ElementName=TestListView, Path=Items.Count, Converter={StaticResource IntToStringConverter}}"></TextBlock>
+                            </Expander.Header>
+                            <StackPanel>
+                                <StackPanel x:Name="priorityContainer" Orientation="Horizontal" CheckBox.Click="PriorityClick"></StackPanel>
+                                <CheckBox x:Name="autoDetect" IsChecked="True">Auto detect custom test properties</CheckBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Custom1: " VerticalAlignment="Center"/>
+                                    <TextBox x:Name="CustomTestProperty1" Width="60"></TextBox>
+                                    <TextBlock Text=" Custom2: " VerticalAlignment="Center"/>
+                                    <TextBox x:Name="CustomTestProperty2" Width="60"></TextBox>
+                                    <TextBlock Text=" Custom3: " VerticalAlignment="Center"/>
+                                    <TextBox x:Name="CustomTestProperty3" Width="60"></TextBox>
+                                </StackPanel>
+                                <CheckBox x:Name="Exclusive" Click="PriorityClick">Exclude the tests containing the following charactors</CheckBox>
+                                <TextBox x:Name="TestCaseName" MaxHeight="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" TextChanged="TestCaseNameChanged"></TextBox>
+                            </StackPanel>
+                        </Expander>
+                        <ListView x:Name="TestListView" Grid.Row="1" BorderThickness="0"
+                                  Width="{Binding TestCaseContainer.Width}" 
+                                  ItemsSource="{Binding TestCasesModelICollectionView}" 
+                                  SelectionChanged="TestListViewSelectionChanged">
+                            <ListView.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Foreground" Value="{Binding Path=Ignore, Converter={StaticResource BooleanToColorConverter}}" />
+                                </Style>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="IsSelected" Value="{Binding Path=IsChecked}"></Setter>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn>
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <CheckBox x:Name="AllCheckBox" Click="ToggleAllCheckBoxClick" HorizontalAlignment="Stretch"></CheckBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Click="ToggleSingleCheckBoxClick" HorizontalAlignment="Stretch" IsChecked="{Binding IsChecked}" Visibility="{Binding Ignore, Converter={StaticResource BooleanToVisibilityConverter}}"></CheckBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="300" x:Name="NameColumn">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Name" Width="{Binding ElementName=NameColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="30" x:Name="PriorityColumn">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="P" Width="{Binding ElementName=PriorityColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Priority}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="60" x:Name="OwnerColumn">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Owner" Width="{Binding ElementName=OwnerColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Owner}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="300" x:Name="DescriptionColumn">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Description" Width="{Binding ElementName=DescriptionColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Description}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="80" x:Name="Custom1Column">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Custom1" Width="{Binding ElementName=Custom1Column, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Custom1}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="80" x:Name="Custom2Column">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Custom2" Width="{Binding ElementName=Custom2Column, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Custom2}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="80" x:Name="Custom3Column">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock MouseDown="Sort" Text="Custom3" Width="{Binding ElementName=Custom3Column, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock TextWrapping="NoWrap" Text="{Binding Custom3}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Run Selection" Command="{StaticResource RunSelectionCommand}"></MenuItem>
+                                    <MenuItem Header="Run Selection on clients" Command="{StaticResource RunSelectionOnClientsCommand}"></MenuItem>
+                                    <MenuItem Header="Export Selection to Excel" Command="{StaticResource ExportSelectionToExcelCommand}"></MenuItem>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource MainStatusBarBackgroundBrushKey}" Foreground="White" x:Name="statusBar">
+            <TextBlock x:Name="statusBarText"></TextBlock>
+        </StatusBar>
+    </Grid>
+</Window>

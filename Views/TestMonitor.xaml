@@ -1,0 +1,170 @@
+﻿<UserControl x:Class="TestViewer.Views.TestMonitor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vc="clr-namespace:TestViewer.ValueConverters"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ResourceDictionary.xaml"/>
+                <ResourceDictionary Source="/Resources/SystemColors.xaml"/>
+                <ResourceDictionary Source="/Resources/RoutedUICommands.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <vc:StringToBitmapImageValueConverter x:Key="StringToBitmapImageConverter"></vc:StringToBitmapImageValueConverter>
+        </Grid.Resources>
+        <Grid.CommandBindings>
+            <CommandBinding Command="{StaticResource ViewTestResultsDetailsForTestMonitorCommand}" Executed="ViewTestResultsDetailsForTestMonitorExecute"></CommandBinding>
+        </Grid.CommandBindings>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Visibility="Collapsed">
+            <Button Style="{StaticResource TransparentButton}" Click="ResumeClick" IsEnabled="False">
+                <Image Width="20" Height="20" Source="/Resources/TestMonitor_Resume.png" IsEnabled="False"></Image>
+            </Button>
+            <Button Style="{StaticResource TransparentButton}" Click="PauseClick">
+                <Image Width="20" Height="20" Source="/Resources/TestMonitor_Pause.png"></Image>
+            </Button>
+            <Button Style="{StaticResource TransparentButton}" Click="StopClick">
+                <Image Width="20" Height="20" Source="/Resources/TestMonitor_Stop.png"></Image>
+            </Button>
+            <Button Click="SendMail">Send Mail</Button>
+        </StackPanel>
+        <ListView x:Name="testPassList" Grid.Row="1" ItemsSource="{Binding TestCasesModelScheduledICollectionView}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="AllCheckBox" HorizontalAlignment="Stretch"></CheckBox>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Stretch" IsChecked="{Binding IsChecked}"></CheckBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Result" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="18" Source="{Binding State, Converter={StaticResource StringToBitmapImageConverter}}"></Image>
+                                    <TextBlock Text="{Binding State}" Margin="5,0,0,0"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="350" x:Name="NameColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Name" Width="{Binding ElementName=NameColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn> 
+                    <GridViewColumn Width="50" x:Name="RerunColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Rerun" Width="{Binding ElementName=RerunColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding RerunTimes}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="120" x:Name="ClientColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Client" Width="{Binding ElementName=ClientColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding ClientMachineName}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250" x:Name="ClientInfoColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="ClientInfo" Width="{Binding ElementName=ClientInfoColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding ClientMachineInfo}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" Header="Duration" x:Name="DurationColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Duration" Width="{Binding ElementName=DurationColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding Duration, StringFormat={}{0:mm:ss}}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" x:Name="StartTimeColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Start Time" Width="{Binding ElementName=StartTimeColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding StartTime, StringFormat={}{0:MM-dd hh:mm:ss}}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" Header="End Time" x:Name="EndTimeColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="End Time" Width="{Binding ElementName=EndTimeColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="NoWrap" Text="{Binding EndTime, StringFormat={}{0:MM-dd hh:mm:ss}}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="ErrorMessageColumn">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock MouseDown="Sort" Text="Error Message" Width="{Binding ElementName=ErrorMessageColumn, Path=Width}" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Width="500" TextWrapping="NoWrap" Text="{Binding BriefErrorMessage}" TextTrimming="CharacterEllipsis" Margin="5,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="View Test Results Details" Command="{StaticResource ViewTestResultsDetailsForTestMonitorCommand}"></MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+        </ListView>
+    </Grid>
+</UserControl>
