@@ -4,13 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Data;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
     using System.Collections.Generic;
     using System.Text;
 using System;

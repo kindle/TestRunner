@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Models
+namespace TestRunner.Models
 {
     /// <summary>
     /// Test case state

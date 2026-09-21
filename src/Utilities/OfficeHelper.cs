@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System;
     using System.ComponentModel;
@@ -14,8 +14,8 @@ namespace TestViewer.Utilities
     using System.Text;
 
     //using Microsoft.Office.Interop.Excel;
-    using TestViewer.Models;
-    using TestViewer.ViewModels;
+    using TestRunner.Models;
+    using TestRunner.ViewModels;
     using System.Security.Principal;
     using System.Collections.Generic;
     using System.DirectoryServices;
@@ -402,7 +402,7 @@ namespace TestViewer.Utilities
 <body>
 <table style='border: 1px solid #FFE211; width: 1502px; background-color: #FFF6BD; font-family: segoe UI, Tahoma, Geneva, Verdana, sans-serif; font-size: 13px;'>
 	<tr>
-		<td style='height: 21px'>WARNING: The results in this report were sent by Bailin Studio automatically, any concern please contact application");
+		<td style='height: 21px'>WARNING: The results in this report were sent by Test Runner automatically, any concern please contact application");
             strbd.AppendLine("launcher(" + WindowsIdentity.GetCurrent().Name + ") directly</td></tr></table><br/><br/>");
 
             strbd.AppendLine("<table cellpadding=\"0\" cellspacing=\"0\">");
@@ -475,7 +475,7 @@ namespace TestViewer.Utilities
             //strbd.AppendLine("        Eiffel Test Team Automation Report " + String.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now) + "</span><br>");
             //strbd.AppendLine("<b><i><span style='font-size:9.0pt;font-family:\"Arial\",\"sans-serif\";");
             //strbd.AppendLine("color:white;background:green;mso-highlight:green'>This Notification is sent by");
-            //strbd.AppendLine("Bailin Studio(" + Assembly.GetExecutingAssembly().GetName().Version + ") automatically, any concern please contact application");
+            //strbd.AppendLine("Test Runner(" + Assembly.GetExecutingAssembly().GetName().Version + ") automatically, any concern please contact application");
             //strbd.AppendLine("launcher(" + WindowsIdentity.GetCurrent().Name + ") directly.</span></i></b></p>");
             //strbd.AppendLine("    <span style=\"font-family: Calibri; font-size: 11pt\"><u>Summary:</u></span>");
             //strbd.AppendLine("    <ul>");
@@ -868,7 +868,7 @@ namespace TestViewer.Utilities
 <body>
 <table style='border: 1px solid #FFE211; width: 1502px; background-color: #FFF6BD; font-family: segoe UI, Tahoma, Geneva, Verdana, sans-serif; font-size: 13px;'>
 	<tr>
-		<td style='height: 21px'>WARNING: The results in this report were sent by Bailin Studio automatically, any concern please contact application");
+		<td style='height: 21px'>WARNING: The results in this report were sent by Test Runner automatically, any concern please contact application");
             strbd.AppendLine("launcher(" + WindowsIdentity.GetCurrent().Name + ") directly</td></tr></table><br/><br/>");
 
             strbd.AppendLine("<table cellpadding=\"0\" cellspacing=\"0\">");

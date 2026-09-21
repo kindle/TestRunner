@@ -6,7 +6,7 @@
 
 using System.Windows;
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -18,8 +18,8 @@ namespace TestViewer.ViewModels
     using System.Windows.Data;
     using System.Windows.Media;
 
-    using TestViewer.Models;
-    using TestViewer.Utilities;
+    using TestRunner.Models;
+    using TestRunner.Utilities;
 
     /// <summary>
     /// Test cases view model
@@ -148,9 +148,11 @@ namespace TestViewer.ViewModels
         /// <summary>
         /// Create client
         /// </summary>
-        public void CreateClient()
+        /// <returns>True if the client connected to the server successfully</returns>
+        public bool CreateClient()
         {
             this.tcpClientHelper = new TcpClientHelper();
+            return this.tcpClientHelper.IsConnected;
         }
 
         /// <summary>
@@ -422,7 +424,9 @@ namespace TestViewer.ViewModels
         {
             // TODO auto rerun
             // Start run in another thread
-            new Thread(new ThreadStart(RunTestsOnClientsWorkerThread)).Start();
+            var runOnClientsThread = new Thread(new ThreadStart(RunTestsOnClientsWorkerThread));
+            runOnClientsThread.IsBackground = true;
+            runOnClientsThread.Start();
 
             //new Thread(new ThreadStart(TestPassWatcherThread)).Start();
             //Thread a = new Thread(RunTestsOnClientsWorkerThread);
@@ -503,7 +507,7 @@ namespace TestViewer.ViewModels
 
                                 #endregion
 
-                                this.tcpServerHelper.SendMessageToClientByMachineName(machineName, "UPDATETESTBITS$" + SourceTestDllUrl + "$" + SourceTestSettingsUrl);
+                                this.tcpServerHelper.SendTestBitsToClientByMachineName(machineName, SourceTestDllUrl, SourceTestSettingsUrl);
                                 machineName = string.Empty;
                             }
 

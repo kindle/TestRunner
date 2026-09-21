@@ -4,9 +4,9 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
-    using TestViewer.Models;
+    using TestRunner.Models;
 
     /// <summary>
     /// Test window view model

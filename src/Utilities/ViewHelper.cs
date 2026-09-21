@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System.Windows;
     using System.Windows.Media;

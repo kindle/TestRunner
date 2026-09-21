@@ -4,12 +4,12 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System.Collections.Generic;
     using System.IO;
     using System.IO.IsolatedStorage;
-    using TestViewer.ViewModels;
+    using TestRunner.ViewModels;
     
     /// <summary>
     /// Test Machine Tree View helper

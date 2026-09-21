@@ -6,7 +6,7 @@
 
 using System.Linq;
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System.IO;
 

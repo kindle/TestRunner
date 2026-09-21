@@ -1,5 +1,5 @@
 ﻿
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System.Windows;
     using System.Windows.Controls;

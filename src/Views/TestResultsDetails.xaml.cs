@@ -4,11 +4,11 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System.Windows.Controls;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
 
     /// <summary>
     /// Interaction logic for TestResultsDetails.xaml

@@ -4,14 +4,14 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ValueConverters
+namespace TestRunner.ValueConverters
 {
     using System;
     using System.Globalization;
     using System.Windows.Data;
     using System.Windows.Media.Imaging;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
 
     /// <summary>
     /// String to bitmap image value converter

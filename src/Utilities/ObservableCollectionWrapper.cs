@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System;
     using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ namespace TestViewer.Utilities
     using System.Windows.Media;
     using System.Windows.Threading;
     
-    using TestViewer.ViewModels;
+    using TestRunner.ViewModels;
     using System.Reflection;
 
     /// <summary>

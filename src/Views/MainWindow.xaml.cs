@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System;
     using System.Collections.Generic;
@@ -17,9 +17,9 @@ namespace TestViewer.Views
     using System.Windows.Input;
     using System.Windows.Threading;
 
-    using TestViewer.Models;
-    using TestViewer.Utilities;
-    using TestViewer.ViewModels;
+    using TestRunner.Models;
+    using TestRunner.Utilities;
+    using TestRunner.ViewModels;
     using Microsoft.Win32;
 
     /// <summary>
@@ -200,6 +200,12 @@ namespace TestViewer.Views
 
                 this.priorityContainer.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
+                    CheckBox allCheckBox = ViewHelper.FindVisualChildByName<CheckBox>(this.TestListView, "AllCheckBox");
+                    if (allCheckBox != null)
+                    {
+                        allCheckBox.IsChecked = false;
+                    }
+
                     this.priorityContainer.Children.Clear();
                     // Load priorities
                     foreach (var i in this.testCasesViewModel.GetPriorities())
@@ -324,6 +330,7 @@ namespace TestViewer.Views
                 var sp = new StartPage();
                 sp.NewProject += this.NewProjectForUserControl;
                 sp.OpenProject += this.OpenProjectForUserControl;
+                sp.CreateServer += this.CreateServer;
                 sp.LoadTests += this.LoadTestsForUserControl;
                 sp.OpenTrx += this.LoadTrxForUserControl;
                 this.AddMonitorWindow("Start Page", sp);
@@ -361,10 +368,12 @@ namespace TestViewer.Views
             tv.SendNameToFilter += this.SendNameToFilterForUserControl;
 
             // Load .trx items in another thread
-            (new Thread(
+            var trxLoaderThread = new Thread(
                 delegate(){
                     LoadTrxThread(tv);
-                })).Start();
+                });
+            trxLoaderThread.IsBackground = true;
+            trxLoaderThread.Start();
 
             this.AddMonitorWindow(shorterTabName, tv);
         }
@@ -676,12 +685,18 @@ namespace TestViewer.Views
 
         private void CreateServer(object sender, RoutedEventArgs e)
         {
+            this.ShowOutput();
             this.testCasesViewModel.CreateServer();
         }
 
         private void CreateClient(object sender, RoutedEventArgs e)
         {
-            this.testCasesViewModel.CreateClient();
+            this.ShowOutput();
+            if (!this.testCasesViewModel.CreateClient())
+            {
+                var settings = new Settings();
+                settings.ShowDialog();
+            }
         }
 
         /// <summary>
@@ -887,6 +902,7 @@ namespace TestViewer.Views
                 {
                     this.RefreshTestPassMonitorTab();
 
+                    LoggerViewModel.BeginTestRun();
                     this.testCasesViewModel.InitializeTestRun();
 
                     action();
@@ -937,7 +953,12 @@ namespace TestViewer.Views
         /// </summary>
         private void OpenProject()
         {
-            this.testCasesViewModel.CreateClient();
+            this.ShowOutput();
+            if (!this.testCasesViewModel.CreateClient())
+            {
+                var settings = new Settings();
+                settings.ShowDialog();
+            }
             //NewTestPass ntp = new NewTestPass();
             //ntp.ShowDialog();
         }
@@ -949,6 +970,14 @@ namespace TestViewer.Views
                 this.LeftGrid.RowDefinitions[1].Height = new GridLength(33);
             }
             else
+            {
+                this.LeftGrid.RowDefinitions[1].Height = new GridLength(200);
+            }
+        }
+
+        private void ShowOutput()
+        {
+            if (this.LeftGrid.RowDefinitions[1].Height == new GridLength(33))
             {
                 this.LeftGrid.RowDefinitions[1].Height = new GridLength(200);
             }

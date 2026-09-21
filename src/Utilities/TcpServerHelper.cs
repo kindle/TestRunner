@@ -4,11 +4,12 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
@@ -16,8 +17,8 @@ namespace TestViewer.Utilities
     using System.Windows;
     using System.Windows.Media;
 
-    using TestViewer.Models;
-    using TestViewer.ViewModels;
+    using TestRunner.Models;
+    using TestRunner.ViewModels;
     using System.Reflection;
 
     /// <summary>
@@ -44,14 +45,13 @@ namespace TestViewer.Utilities
             listener.Start();
             LoggerViewModel.Log(string.Format("Server created successfully! IP address: {0}, port: {1}.", SettingsHelper.GetLocalIPAddress(), TestCasesViewModel.ServerPort));
             thread = new Thread(WorkerThread);
+            thread.IsBackground = true;
             thread.Start();
         }
 
         private void WorkerThread()
         {
             byte[] recvBytes;
-            int BufferSize = 256;
-            //int BufferSize = 256 * 1024;
             threadStopper = false;
             while (!threadStopper)
             {
@@ -68,11 +68,10 @@ namespace TestViewer.Utilities
                     }
                     else
                     {
-                        NetworkStream ns = tcp.GetStream();
                         try
                         {
                             byte[] bytes = encoding.GetBytes("Server is full.");
-                            ns.Write(bytes, 0, bytes.Length);
+                            SendMessageToClient(tcp, bytes);
                         }
                         catch (Exception ex)
                         {
@@ -96,29 +95,23 @@ namespace TestViewer.Utilities
                             NetworkStream ns = client.GetStream();
                             if (ns.DataAvailable)
                             {
-                                List<byte> list = new List<byte>();
-
-                                recvBytes = new byte[BufferSize];
-
-                                int endFlag = 0;
-                                do
+                                try
                                 {
-                                    int len = ns.Read(recvBytes, 0, BufferSize);
-                                    if (len == BufferSize)
-                                    {
-                                        list.AddRange(recvBytes);
-                                        endFlag = 1;
-                                    }
-                                    else
-                                    {
-                                        //this is the end 
-                                        for (int index = 0; index < len; index++)
-                                            list.Add(recvBytes[index]);
-                                        endFlag = 0;
-                                    }
-                                } while (endFlag == 1);
+                                    recvBytes = ReadMessage(ns);
+                                }
+                                catch (Exception ex)
+                                {
+                                    string machineName = clients[i].ClientName;
+                                    client.Close();
+                                    MarkClientDisconnected(machineName);
+                                    clients.RemoveAt(i);
+                                    i--;
 
-                                recvBytes = list.ToArray();
+                                    if (enableCrossThreadLog)
+                                        LoggerViewModel.Log(string.Format("Client machine: {0} connection closed: {1}", machineName, ex.Message), Colors.Red);
+
+                                    continue;
+                                }
 
                                 string recvMsg = encoding.GetString(recvBytes);
 
@@ -217,8 +210,8 @@ namespace TestViewer.Utilities
                                 }
                                 else if (recvMsg.IndexOf("CLIETNCOPYFILEERROR$") == 0)
                                 {
-                                    var sharedFolder = recvMsg.Split('$')[1];
-                                    var logMessage = string.Format("Client machine: {0} can't access to the shared folder: {1}.", clients[i].ClientName, sharedFolder);
+                                    var error = recvMsg.Split('$')[1];
+                                    var logMessage = string.Format("Client machine: {0} failed to receive test bits: {1}.", clients[i].ClientName, error);
                                     if (enableCrossThreadLog)
                                         LoggerViewModel.Log(logMessage);
 
@@ -239,6 +232,24 @@ namespace TestViewer.Utilities
                                         t.ClientMachineName = clients[i].ClientName;
                                     }
                                 }
+                                else if (recvMsg.IndexOf("RUNTESTERROR$") == 0)
+                                {
+                                    string errorMessage = recvMsg.Substring("RUNTESTERROR$".Length);
+                                    foreach (TestCase t in this._testCasesModelICollectionView)
+                                    {
+                                        if (t.State == TestCaseState.Running && t.ClientMachineName == clients[i].ClientName)
+                                        {
+                                            t.State = TestCaseState.Failed;
+                                            t.BriefErrorMessage = errorMessage;
+                                            t.ErrorMessage = errorMessage;
+                                            break;
+                                        }
+                                    }
+
+                                    FreeClient(clients[i].ClientName);
+                                    if (enableCrossThreadLog)
+                                        LoggerViewModel.Log(string.Format("[{0}] failed to start test: {1}", clients[i].ClientName, errorMessage), Colors.Red);
+                                }
                                 else if (recvMsg.IndexOf("RUNTESTRESULT$") == 0)
                                 {
                                     DealWithMessage(recvMsg, clients[i]);
@@ -250,20 +261,14 @@ namespace TestViewer.Utilities
                                 }
                                 else if (recvMsg.IndexOf("DISCONNECT$") == 0)
                                 {
-                                    clients[i].Client.Client.Disconnect(false);
-
                                     string machineName = clients[i].ClientName;
-
-                                    for (int index = 0; index < TestMachinesViewModel.ClientsModel.Count; index++)
-                                    {
-                                        if (TestMachinesViewModel.ClientsModel[index].Name.Equals(machineName))
-                                        {
-                                            TestMachinesViewModel.ClientsModel[index].State = TestMachineState.Disconnected;
-                                            break;
-                                        }
-                                    }
+                                    clients[i].Client.Close();
+                                    MarkClientDisconnected(machineName);
                                     if (enableCrossThreadLog)
                                         LoggerViewModel.Log(string.Format("Client machine: {0} disconnected.", machineName));
+
+                                    clients.RemoveAt(i);
+                                    i--;
                                 }
                                 else
                                 {
@@ -281,6 +286,48 @@ namespace TestViewer.Utilities
             }
         }
 
+        private static void MarkClientDisconnected(string machineName)
+        {
+            for (int index = 0; index < TestMachinesViewModel.ClientsModel.Count; index++)
+            {
+                if (TestMachinesViewModel.ClientsModel[index].Name.Equals(machineName))
+                {
+                    TestMachinesViewModel.ClientsModel[index].State = TestMachineState.Disconnected;
+                    break;
+                }
+            }
+        }
+
+        private static byte[] ReadMessage(NetworkStream stream)
+        {
+            byte[] lengthBytes = ReadExactly(stream, sizeof(int));
+            int messageLength = BitConverter.ToInt32(lengthBytes, 0);
+            if (messageLength < 0)
+            {
+                throw new InvalidDataException("Invalid TCP message length.");
+            }
+
+            return ReadExactly(stream, messageLength);
+        }
+
+        private static byte[] ReadExactly(NetworkStream stream, int count)
+        {
+            byte[] bytes = new byte[count];
+            int offset = 0;
+            while (offset < count)
+            {
+                int bytesRead = stream.Read(bytes, offset, count - offset);
+                if (bytesRead == 0)
+                {
+                    throw new EndOfStreamException("The TCP connection closed during a message.");
+                }
+
+                offset += bytesRead;
+            }
+
+            return bytes;
+        }
+
         private void FreeClient(string machineName)
         {
             for (int index = 0; index < TestMachinesViewModel.ClientsModel.Count; index++)
@@ -295,7 +342,6 @@ namespace TestViewer.Utilities
 
         private void DealWithMessage(string recvMsg, TCPClientInfo client)
         {
-            bool hasException = false;
             try
             {
                 string testID = "";
@@ -369,21 +415,22 @@ namespace TestViewer.Utilities
                     }
                 }
 
+                if (enableCrossThreadLog && !string.IsNullOrEmpty(errorMessage))
+                    LoggerViewModel.Log(string.Format("ErrorMessage: {0}", errorMessage), Colors.Red);
+
                 if (enableCrossThreadLog)
                     LoggerViewModel.Log(string.Format("{0} {1} [{2}].", testID, outCome, client.ClientName), logColor);
             }
             // bug of VS
             catch (TargetInvocationException ex)
             {
-                hasException = true;
-
                 if (enableCrossThreadLog)
                     LoggerViewModel.Log(string.Format("Throw a targetInvocationException [TcpServerHelper][RUNTESTRESULT$]: {0}.", ex.Message), Colors.Red);
+
+                MarkRunningTestFailed(client, ex.Message);
             }
             catch (Exception ex)
             {
-                hasException = true;
-
                 if (enableCrossThreadLog)
                 {
                     LoggerViewModel.Log(
@@ -395,28 +442,23 @@ namespace TestViewer.Utilities
                             "xml:{0}.",
                             recvMsg), Colors.SlateGray);
                 }
-            }
-            finally
-            {
-                if (hasException)
-                {
-                    string resultsInnerXml = recvMsg.Replace("RUNTESTRESULT$", "");
-                    int testIDStartIndex = resultsInnerXml.IndexOf(@"testName=""") + 10;
-                    int testIDEndIndex = resultsInnerXml.IndexOf(@"""", testIDStartIndex);
-                    string testID = resultsInnerXml.Substring(testIDStartIndex, testIDEndIndex - testIDStartIndex);
-                    foreach (TestCase t in this._testCasesModelICollectionView)
-                    {
-                        if (t.ID.EndsWith("." + testID))
-                        {
-                             t.State = TestCaseState.Failed;
-                             t.BriefErrorMessage = "Unknown Error";
-                             t.ErrorMessage = t.BriefErrorMessage;
-                             t.ClientMachineName = client.ClientName;
-                             t.ClientMachineInfo = string.Format("{0} {1}", client.ClientOS, client.ClientBrowser);
 
-                             break;
-                        }
-                    }
+                MarkRunningTestFailed(client, ex.Message);
+            }
+        }
+
+        private void MarkRunningTestFailed(TCPClientInfo client, string errorMessage)
+        {
+            foreach (TestCase testCase in this._testCasesModelICollectionView)
+            {
+                if (testCase.State == TestCaseState.Running && testCase.ClientMachineName == client.ClientName)
+                {
+                    testCase.State = TestCaseState.Failed;
+                    testCase.BriefErrorMessage = errorMessage;
+                    testCase.ErrorMessage = errorMessage;
+                    testCase.ClientMachineName = client.ClientName;
+                    testCase.ClientMachineInfo = string.Format("{0} {1}", client.ClientOS, client.ClientBrowser);
+                    break;
                 }
             }
         }
@@ -460,11 +502,20 @@ namespace TestViewer.Utilities
 
         private void SendMessageToClient(int target, byte[] bytes)
         {
-            TcpClient tcp = clients[target].Client;
+            SendMessageToClient(clients[target].Client, bytes);
+        }
+
+        private void SendMessageToClient(TcpClient tcp, byte[] bytes)
+        {
             NetworkStream ns = tcp.GetStream();
             try
             {
-                ns.Write(bytes, 0, bytes.Length);
+                byte[] length = BitConverter.GetBytes(bytes.Length);
+                lock (ns)
+                {
+                    ns.Write(length, 0, length.Length);
+                    ns.Write(bytes, 0, bytes.Length);
+                }
             }
             catch (Exception ex)
             {
@@ -474,19 +525,55 @@ namespace TestViewer.Utilities
             Thread.Sleep(100);
         }
 
-        private void SendMessageToClient(TcpClient tcp, byte[] bytes)
+        public void SendTestBitsToClientByMachineName(string machineName, string dllPath, string testSettingsPath)
         {
-            NetworkStream ns = tcp.GetStream();
-            try
-            {
-                ns.Write(bytes, 0, bytes.Length);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            string sourceDirectory = Path.GetDirectoryName(dllPath);
+            string[] sourceFiles = Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories);
 
-            Thread.Sleep(100);
+            using (MemoryStream payload = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(payload, encoding))
+            {
+                writer.Write(encoding.GetBytes("TESTBITS$"));
+                writer.Write(Path.GetFileName(dllPath));
+
+                bool settingsIsInSourceDirectory = !string.IsNullOrEmpty(testSettingsPath)
+                    && Path.GetFullPath(testSettingsPath).StartsWith(Path.GetFullPath(sourceDirectory) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+                string testSettingsRelativePath = string.IsNullOrEmpty(testSettingsPath)
+                    ? string.Empty
+                    : settingsIsInSourceDirectory
+                        ? testSettingsPath.Substring(sourceDirectory.Length).TrimStart(Path.DirectorySeparatorChar)
+                        : Path.GetFileName(testSettingsPath);
+                writer.Write(testSettingsRelativePath);
+                writer.Write(sourceFiles.Length + (string.IsNullOrEmpty(testSettingsPath) || settingsIsInSourceDirectory ? 0 : 1));
+
+                foreach (string sourceFile in sourceFiles)
+                {
+                    WriteFile(writer, sourceFile, sourceFile.Substring(sourceDirectory.Length).TrimStart(Path.DirectorySeparatorChar));
+                }
+
+                if (!string.IsNullOrEmpty(testSettingsPath) && !settingsIsInSourceDirectory)
+                {
+                    WriteFile(writer, testSettingsPath, Path.GetFileName(testSettingsPath));
+                }
+
+                foreach (TCPClientInfo client in clients)
+                {
+                    if (client.ClientName.Equals(machineName))
+                    {
+                        SendMessageToClient(client.Client, payload.ToArray());
+                        LoggerViewModel.Log(string.Format("Sending test bits to [{0}] via TCP...", machineName));
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static void WriteFile(BinaryWriter writer, string sourcePath, string relativePath)
+        {
+            byte[] fileBytes = File.ReadAllBytes(sourcePath);
+            writer.Write(relativePath);
+            writer.Write((long)fileBytes.Length);
+            writer.Write(fileBytes);
         }
 
         public void SendMessageToClientByMachineName(string machineName, string message)
@@ -503,9 +590,28 @@ namespace TestViewer.Utilities
 
         public void Dispose()
         {
-            //byte[] b = encoding.GetBytes(clients[0].ClientName + " Server has left the game!");
-            //BroadCasting(0, b);
             threadStopper = true;
+
+            if (thread != null && thread.IsAlive)
+            {
+                thread.Join(1000);
+            }
+
+            foreach (TCPClientInfo client in clients.ToArray())
+            {
+                if (client.Client != null && client.Client.Connected)
+                {
+                    SendMessageToClient(client.Client, encoding.GetBytes("SERVERDISCONNECT$"));
+                }
+
+                if (client.Client != null)
+                {
+                    client.Client.Close();
+                }
+            }
+
+            clients.Clear();
+            listener.Stop();
         }
     }
 

@@ -4,11 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
+    using System.IO;
+    using System.Text;
     using System.Windows.Media;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
     using System.ComponentModel;
     using System.Windows.Data;
     using System;
@@ -19,6 +21,9 @@ namespace TestViewer.ViewModels
     /// </summary>
     public class LoggerViewModel
     {
+        private static readonly object LogFileLock = new object();
+        private static string logFile;
+
         /// <summary>
         /// Initializes a new instance of the LoggerViewModel class
         /// </summary>
@@ -56,11 +61,16 @@ namespace TestViewer.ViewModels
         {
             try
             {
+                DateTime timestamp = DateTime.Now;
+                string message = timestamp.ToString("hh:mm:ss tt: ") + text.Trim();
+
                 LogsModel.Add(new Log
                 {
-                    Message = DateTime.Now.ToString("hh:mm:ss tt: ") + text.Trim(),
+                    Message = message,
                     MessageColor = color
                 });
+
+                WriteToLogFile(timestamp, message);
             }
             // bug of VS
             catch (TargetInvocationException ex)
@@ -70,6 +80,44 @@ namespace TestViewer.ViewModels
             catch (Exception ex)
             {
                 Log(string.Format("Throw an exception [LoggerViewModel]: {0}.", ex.Message), Colors.Red);
+            }
+        }
+
+        /// <summary>
+        /// Starts a new log file for a test run
+        /// </summary>
+        public static void BeginTestRun()
+        {
+            string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+
+            lock (LogFileLock)
+            {
+                Directory.CreateDirectory(logDirectory);
+                logFile = Path.Combine(logDirectory, "TestRunner_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".log");
+                File.WriteAllText(logFile, string.Empty, Encoding.UTF8);
+            }
+        }
+
+        private static void WriteToLogFile(DateTime timestamp, string message)
+        {
+            try
+            {
+                string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+
+                lock (LogFileLock)
+                {
+                    Directory.CreateDirectory(logDirectory);
+                    if (logFile == null)
+                    {
+                        logFile = Path.Combine(logDirectory, "TestRunner_" + timestamp.ToString("yyyyMMdd_HHmm") + ".log");
+                    }
+
+                    File.AppendAllText(logFile, message + Environment.NewLine, Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to write TestRunner log file: " + ex.Message);
             }
         }
 

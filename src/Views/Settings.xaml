@@ -1,7 +1,7 @@
-﻿<Window x:Class="TestViewer.Views.Settings"
+﻿<Window x:Class="TestRunner.Views.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:v="clr-namespace:TestViewer.Views"
+        xmlns:v="clr-namespace:TestRunner.Views"
         Title="Settings" 
         Height="500" 
         Width="800"
@@ -57,7 +57,7 @@
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Server IP Address:</TextBlock>
             <TextBox Grid.Row="3" Grid.Column="1" Height="20" x:Name="serverIPAddress" Margin="3"></TextBox>
             <TextBlock Grid.Row="4" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">Server Port:</TextBlock>
-            <TextBox Grid.Row="4" Grid.Column="1" Height="20" x:Name="serverPort" Margin="3">2222</TextBox>
+            <TextBox Grid.Row="4" Grid.Column="1" Height="20" x:Name="serverPort" Margin="3">14623</TextBox>
             <TextBlock Grid.Row="5" Grid.Column="0" Margin="10,3,3,3" VerticalAlignment="Center">TestSettings file:</TextBlock>
             <v:FileInputBox Grid.Row="5" Grid.Column="1" x:Name="testSettings" Height="20" Margin="3" Filter="TestSettings File|*.testsettings"></v:FileInputBox>
         </Grid>

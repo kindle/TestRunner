@@ -4,13 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer
+namespace TestRunner
 {
     using System;
     using System.Threading;
     using System.Windows;
 
-    using TestViewer.Views;
+    using TestRunner.Views;
 
     /// <summary>
     /// Interaction logic for App.xaml

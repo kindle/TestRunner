@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ValueConverters
+namespace TestRunner.ValueConverters
 {
     using System;
     using System.Globalization;

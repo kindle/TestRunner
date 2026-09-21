@@ -4,13 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
 
-    using TestViewer.Utilities;
+    using TestRunner.Utilities;
 
     /// <summary>
     /// Interaction logic for TrxViewer.xaml

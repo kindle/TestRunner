@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows;
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     /// <summary>
     /// Interaction logic for About.xaml

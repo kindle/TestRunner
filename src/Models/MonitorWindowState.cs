@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Models
+namespace TestRunner.Models
 {
     /// <summary>
     /// Monitor window state in working area

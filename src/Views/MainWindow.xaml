@@ -1,8 +1,8 @@
-﻿<Window x:Class="TestViewer.Views.MainWindow"
+﻿<Window x:Class="TestRunner.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:TestViewer.ViewModels"
-        Title="Bailin Studio" 
+        xmlns:vm="clr-namespace:TestRunner.ViewModels"
+        Title="Test Runner" 
         Height="768" 
         Width="1024" 
         x:Name="root"
@@ -98,7 +98,7 @@
                 <MenuItem Header="Create Client" Click="CreateClient"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="About Bailin Studio" Click="About" />
+                <MenuItem Header="About Test Runner" Click="About" />
                 <!--<Separator />
                 <MenuItem Header="View Help" />-->
             </MenuItem>

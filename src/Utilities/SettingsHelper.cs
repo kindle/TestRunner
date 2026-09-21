@@ -6,14 +6,14 @@
 
 using System;
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Linq;
     using System.Net;
     
-    using TestViewer.ViewModels;
+    using TestRunner.ViewModels;
 
     /// <summary>
     /// Settings helper
@@ -24,6 +24,8 @@ namespace TestViewer.Utilities
         /// Isolated file name for settings
         /// </summary>
         private const string IsolatedFileNameForSettings = "FooStudioSettings";
+
+        public const string DefaultServerPort = "14623";
 
         /// <summary>
         /// Save settings
@@ -74,7 +76,8 @@ namespace TestViewer.Utilities
                         
                         // IP, Port and TestSettings
                         TestCasesViewModel.ServerIPAddress = reader.ReadLine();
-                        TestCasesViewModel.ServerPort = reader.ReadLine();
+                        string savedServerPort = reader.ReadLine();
+                        TestCasesViewModel.ServerPort = string.IsNullOrWhiteSpace(savedServerPort) ? DefaultServerPort : savedServerPort;
                         TestCasesViewModel.SourceTestSettingsUrl = reader.ReadLine();
                         reader.Close();
                     }
@@ -82,7 +85,7 @@ namespace TestViewer.Utilities
                 else
                 {
                     // default values
-                    SaveSettings(GetDefaultTestBitsFolder(), GetDefaultTestResultFolder(), "", "", "");
+                    SaveSettings(GetDefaultTestBitsFolder(), GetDefaultTestResultFolder(), "", DefaultServerPort, "");
                     LoadSettings();
                 }
             }
@@ -120,14 +123,24 @@ namespace TestViewer.Utilities
 
         public static string GetDefaultTestBitsFolder(string testBitsFolder = null)
         {
-            return GetDefaultFolder(testBitsFolder, "TestBit");
+            return GetDefaultFolder(testBitsFolder, "TestBits");
         }
 
         private static string GetDefaultFolder(string folderName, string subFolderName)
         {
-            // get rid of A:/ for VMs
-            var driveList = DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Fixed && d.IsReady).ToList();
-            var folder = string.IsNullOrEmpty(folderName) ? string.Format("{0}BailinStudio\\{1}", driveList[0].Name, subFolderName) : folderName;
+            var isLegacyDefault = !string.IsNullOrEmpty(folderName)
+                && (string.Equals(subFolderName, "TestBits", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(subFolderName, "TestResult", StringComparison.OrdinalIgnoreCase))
+                && (string.Equals(Path.GetFileName(folderName), subFolderName, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(Path.GetFileName(folderName), "TestBit", StringComparison.OrdinalIgnoreCase))
+                && string.Equals(
+                    Path.GetFileName(Path.GetDirectoryName(folderName)),
+                    "TestRunner",
+                    StringComparison.OrdinalIgnoreCase);
+
+            var folder = string.IsNullOrEmpty(folderName) || isLegacyDefault
+                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, subFolderName)
+                : folderName;
             
             if (!Directory.Exists(folder))
             {

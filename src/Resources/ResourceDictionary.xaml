@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vc="clr-namespace:TestViewer.ValueConverters">
+                    xmlns:vc="clr-namespace:TestRunner.ValueConverters">
     <!--Value Converters-->
     <vc:IntToStringValueConverter x:Key="IntToStringConverter"></vc:IntToStringValueConverter>
     <vc:StringToBitmapImageValueConverter x:Key="StringToBitmapImageConverter"></vc:StringToBitmapImageValueConverter>

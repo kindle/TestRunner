@@ -4,9 +4,9 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Models
+namespace TestRunner.Models
 {
-    using TestViewer.Utilities;
+    using TestRunner.Utilities;
 
     /// <summary>
     /// Observable logs data

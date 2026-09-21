@@ -4,10 +4,10 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
-    using TestViewer.Models;
-    using TestViewer.Utilities;
+    using TestRunner.Models;
+    using TestRunner.Utilities;
 
     /// <summary>
     /// Test machines view model

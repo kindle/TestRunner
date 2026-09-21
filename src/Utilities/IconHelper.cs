@@ -4,13 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System;
     using System.Windows;
     using System.Windows.Interop;
 
-    using TestViewer.Utilities.InteropServices;
+    using TestRunner.Utilities.InteropServices;
 
     /// <summary>
     /// Icon helper

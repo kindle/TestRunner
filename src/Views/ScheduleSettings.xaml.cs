@@ -4,14 +4,14 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System;
     using System.Windows;
     using System.Windows.Input;
 
-    using TestViewer.Utilities;
-    using TestViewer.ViewModels;
+    using TestRunner.Utilities;
+    using TestRunner.ViewModels;
     using System.Windows.Controls;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace TestViewer.Views
 
             this.EmailTo.Text = OfficeHelper.GetLocalAccount();
             this.EmailCc.Text = OfficeHelper.GetLocalAccount();
-            this.EmailSubject.Text = "[{0}]::BailinStudio: Automation - Test Report";
+            this.EmailSubject.Text = "[{0}]::TestRunner: Automation - Test Report";
             this.EmailSignature.Text = "Test Team";
         }
 

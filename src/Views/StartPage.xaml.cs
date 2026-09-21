@@ -7,14 +7,14 @@
 using System;
 using System.Windows.Media.Imaging;
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System.Windows;
     using System.Windows.Controls;
 
     using Microsoft.Win32;
 
-    using TestViewer.ViewModels;
+    using TestRunner.ViewModels;
 
     /// <summary>
     /// Interaction logic for StartPage.xaml
@@ -44,6 +44,15 @@ namespace TestViewer.Views
         /// </summary>
         public static readonly RoutedEvent OpenProjectEvent = EventManager.RegisterRoutedEvent(
             "OpenProject",
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(StartPage));
+
+        /// <summary>
+        /// Register routed event for create server
+        /// </summary>
+        public static readonly RoutedEvent CreateServerEvent = EventManager.RegisterRoutedEvent(
+            "CreateServer",
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(StartPage));
@@ -95,6 +104,15 @@ namespace TestViewer.Views
         }
 
         /// <summary>
+        /// Create server
+        /// </summary>
+        public event RoutedEventHandler CreateServer
+        {
+            add { this.AddHandler(CreateServerEvent, value); }
+            remove { this.RemoveHandler(CreateServerEvent, value); }
+        }
+
+        /// <summary>
         /// Open .trx
         /// </summary>
         public event RoutedEventHandler OpenTrx
@@ -127,6 +145,15 @@ namespace TestViewer.Views
         public void RaiseOpenProjectEvent()
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(OpenProjectEvent);
+            this.RaiseEvent(newEventArgs);
+        }
+
+        /// <summary>
+        /// Raise create server event
+        /// </summary>
+        public void RaiseCreateServerEvent()
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(CreateServerEvent);
             this.RaiseEvent(newEventArgs);
         }
 
@@ -174,6 +201,16 @@ namespace TestViewer.Views
         private void OpenProjectClick(object sender, RoutedEventArgs e)
         {
             this.RaiseOpenProjectEvent();
+        }
+
+        /// <summary>
+        /// Create server
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Request navigate event args</param>
+        private void CreateServerClick(object sender, RoutedEventArgs e)
+        {
+            this.RaiseCreateServerEvent();
         }
 
         /// <summary>

@@ -89,7 +89,7 @@ change to this will fix it. investigating...
 49.optimize the UI, especailly in server 2008, win7,win8 is ok
 52.create a mstesthelper, testcaseviewmodel and clienthelper calls it when run test cases
 57.can drag tab to windows desktop like vs2010
-59.investigate why testviewer.exe still in task bar when closed -- this might be a background process/thread
+59.investigate why TestRunner.exe still in task bar when closed -- this might be a background process/thread
 61.machine list should order by (free and busy)/disconnected
 
 63.can add/delete machines for treeview node, but operations are available only when not running test cases
@@ -118,7 +118,7 @@ change to this will fix it. investigating...
 22.use codebase to describe location of codedui.dll
 26.add a link so user can open workingdirectory directory when clicking it.
 128.test result output folder, default should be the same folder where the .exe is.
-130.when a connected client closed should kill testviewer.exe and server should show it's disconnected state in treeview
+130.when a connected client closed should kill TestRunner.exe and server should show it's disconnected state in treeview
 131.add a timeout state for test case result
 133.show total progress in tray
 135.one client can only connect to server once connect 4 times to make server full is wrong
@@ -270,7 +270,7 @@ dupe80.65.export selected test cases to txt/exl file
 2012.10.04.fixed.137.Log message should be at a global level, would create something like a log controller
 2012.10.04.fixed.151.add right click remove all for logs
 2012.10.04.fixed.132.add a client name/ie version/os version on test result grid - remove ie version
-2012.10.04.fixed.68.change testviewer to Fustian(TPMS) Studio /used to name it Foo as a nick name /how about Elfoo Studio - use Eiffel studio
+2012.10.04.fixed.68.change TestRunner to Fustian(TPMS) Studio /used to name it Foo as a nick name /how about Elfoo Studio - use Eiffel studio
 2012.10.05.fixed.134.for .trx reader it should can send name/fullname/... there should be a option - use name only since no fullname in .trx file
 2012.10.05.fixed.120.need a .trx reader, can select test cases and send their names to filter
 2012.10.05.fixed.30.capable of reading .trx file

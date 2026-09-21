@@ -4,14 +4,14 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
 
-    using TestViewer.Utilities;
+    using TestRunner.Utilities;
     using System.Windows.Input;
 
     /// <summary>

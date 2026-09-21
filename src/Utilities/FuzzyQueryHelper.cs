@@ -4,11 +4,11 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities
+namespace TestRunner.Utilities
 {
     using System.Collections.Generic;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
 
     /// <summary>
     /// Fuzzy query helper

@@ -4,11 +4,11 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ViewModels
+namespace TestRunner.ViewModels
 {
     using System.Collections.ObjectModel;
 
-    using TestViewer.Models;
+    using TestRunner.Models;
 
     /// <summary>
     /// Test pass template view model

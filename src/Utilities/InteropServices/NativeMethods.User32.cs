@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Utilities.InteropServices
+namespace TestRunner.Utilities.InteropServices
 {
     using System;
     using System.Runtime.InteropServices;

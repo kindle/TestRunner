@@ -4,7 +4,7 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.ValidationRules
+namespace TestRunner.ValidationRules
 {
     using System;
     using System.IO;

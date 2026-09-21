@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System.Collections.Generic;
     using System.Windows.Controls;

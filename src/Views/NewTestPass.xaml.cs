@@ -4,13 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
-namespace TestViewer.Views
+namespace TestRunner.Views
 {
     using System;
     using System.Windows;
     using System.Windows.Input;
 
-    using TestViewer.Utilities;
+    using TestRunner.Utilities;
 
     /// <summary>
     /// Logic for NewTestPass
