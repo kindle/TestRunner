@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace ccc.test
@@ -63,6 +65,41 @@ namespace ccc.test
 
             int bondCount = int.Parse(bondMatch.Groups[1].Value, CultureInfo.InvariantCulture);
             Assert.IsTrue(bondCount > 75000, "Bond count was " + bondCount + "; expected more than 75000. Please check the ADS watchlist.");
+        }
+
+        [TestMethod]
+        [Owner("Bailin")]
+        [Priority(1)]
+        [Description("Checks that the ADS ssl_sink route accepts TCP connections on port 14002.")]
+        public void ADS_Connection_Check()
+        {
+            const string configPath = @"D:\CCC\Release\sslcom.cnf";
+            const int port = 14002;
+
+            Assert.IsTrue(File.Exists(configPath), "ADS configuration file not found: " + configPath);
+
+            Match route = ReadAllLinesShared(configPath)
+                .Select(line => Regex.Match(line, @"^\s*\*ipcRoute:\s+ssl_sink\s+(\S+)"))
+                .FirstOrDefault(match => match.Success);
+
+            Assert.IsNotNull(route, "No active *ipcRoute: ssl_sink IP found in " + configPath + ". Lines starting with # are ignored.");
+
+            string ip = route.Groups[1].Value;
+            Assert.IsTrue(IPAddress.TryParse(ip, out IPAddress? address), "Invalid ADS IP address in " + configPath + ": " + ip);
+
+            using var client = new TcpClient();
+            IAsyncResult connection = client.BeginConnect(address, port, null, null);
+            using var waitHandle = connection.AsyncWaitHandle;
+            Assert.IsTrue(waitHandle.WaitOne(TimeSpan.FromSeconds(5)), "Timed out connecting to ADS at " + ip + ":" + port + ".");
+
+            try
+            {
+                client.EndConnect(connection);
+            }
+            catch (SocketException ex)
+            {
+                Assert.Fail("Cannot connect to ADS at " + ip + ":" + port + ": " + ex.Message);
+            }
         }
 
         [TestMethod]

@@ -182,8 +182,8 @@ namespace TestRunner.Utilities
             var info = new MailInfo();
             // TODO: change to multi styles
             info.MailContent = GetTestResultMailGreen(view, totalTicks);
-            info.MailTo = mailFrom; // "bailin.wei@lseg.com";
-            info.MailFrom = mailFrom;
+            info.MailTo = "bailin.wei@lseg.com";//mailTo;
+            info.MailFrom = "evai.sit@lseg.com"; 
             info.MailCC = mailCc;
             var countTotal = view.Cast<TestCase>().Count();
             var countPassed = view.Cast<TestCase>().Count(tc => tc.State == TestCaseState.Passed);

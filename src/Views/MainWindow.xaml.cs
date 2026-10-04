@@ -739,6 +739,30 @@ namespace TestRunner.Views
             this.ExplorerContainer.SelectedIndex = 2;
         }
 
+        /// <summary>
+        /// Menu item config explorer click
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event args</param>
+        private void MenuItemConfigExplorerClick(object sender, RoutedEventArgs e)
+        {
+            this.ExplorerContainer.SelectedIndex = 2;
+        }
+
+        /// <summary>
+        /// Persist display name as the user edits it
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Text changed event args</param>
+        private void ConfigDisplayNameChanged(object sender, TextChangedEventArgs e)
+        {
+            var machine = this.ConfigExplorerGrid.DataContext as TestMachine;
+            if (machine != null)
+            {
+                TestMachineTreeViewHelper.SaveDisplayName(machine.Name, (sender as TextBox).Text);
+            }
+        }
+
         private void About(object sender, RoutedEventArgs e)
         {
             About about = new About();
@@ -772,6 +796,10 @@ namespace TestRunner.Views
                     break;
             }
 
+            var machine = SelectedItem.Tag == "Machine" ? SelectedItem : null;
+            this.ConfigExplorerGrid.DataContext = machine;
+            this.ConfigExplorerGrid.Visibility = machine != null ? Visibility.Visible : Visibility.Collapsed;
+
             this.AddClientMonitorTab();
         }
 
@@ -793,6 +821,35 @@ namespace TestRunner.Views
         private void DisconnectMachine(object sender, RoutedEventArgs e)
         {
             this.testCasesViewModel.DisconnectClientMachine(SelectedMachineName);
+        }
+
+        /// <summary>
+        /// Tree View context menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RemoveMachine(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                this,
+                string.Format("Are you sure you want to remove {0}?", SelectedMachineName),
+                "Remove machine",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var machine = this.ConfigExplorerGrid.DataContext as TestMachine;
+            if (machine != null && machine.Name == SelectedMachineName)
+            {
+                this.ConfigExplorerGrid.DataContext = null;
+                this.ConfigExplorerGrid.Visibility = Visibility.Collapsed;
+            }
+
+            this.testCasesViewModel.RemoveClientMachine(SelectedMachineName);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace TestRunner.Utilities
     using System.Diagnostics;
     using System.IO;
     using System.Net.Sockets;
+    using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -307,6 +308,12 @@ namespace TestRunner.Utilities
             string resultFileName = Environment.UserName + "_" + Environment.MachineName + " " + DateTime.Now.ToString("yyyy-MM-dd hh_mm_ss") + ".trx";
             string resultFile = Path.Combine(testResultOutputFolder, resultFileName);
             string testApplicationPath = Path.ChangeExtension(TestCasesViewModel.LocalTestDllUrl, ".exe");
+            if (!File.Exists(testApplicationPath))
+            {
+                // A test executable may have been copied to a DLL with a different name.
+                string assemblyName = AssemblyName.GetAssemblyName(TestCasesViewModel.LocalTestDllUrl).Name;
+                testApplicationPath = Path.Combine(Path.GetDirectoryName(TestCasesViewModel.LocalTestDllUrl), assemblyName + ".exe");
+            }
 
             if (File.Exists(testApplicationPath))
             {

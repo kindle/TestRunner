@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ccc.test", "ccc.test\ccc.te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "syc.test", "syc.test\syc.test.csproj", "{95D1CCCD-21D0-4138-852E-BCE0CB299BD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zerocurve.test", "zerocurve.test\zerocurve.test.csproj", "{FF5C14D8-1F98-77A9-55CA-500DB81D61C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vah2w.test", "vah2w.test\vah2w.test.csproj", "{FF5C14D8-1F98-77A9-55CA-500DB81D61C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

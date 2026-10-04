@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableMSTestRunner>true</EnableMSTestRunner>
     <OutputType>Exe</OutputType>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
@@ -28,7 +29,7 @@
   </ItemGroup>
 
   <Target Name="CreateTestRunnerAssembly" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)zerocurve.dll" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)vah2w.dll" />
   </Target>
 
 </Project>

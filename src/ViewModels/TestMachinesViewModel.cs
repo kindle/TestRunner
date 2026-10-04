@@ -20,9 +20,12 @@ namespace TestRunner.ViewModels
         public TestMachinesViewModel()
         {
             ClientsModel = new ObservableCollectionWrapper<TestMachine>();
+            var displayNames = TestMachineTreeViewHelper.LoadDisplayNames();
             foreach (var testMachine in TestMachineTreeViewHelper.LoadSettings())
             {
-                ClientsModel.Add(new TestMachine() { Name = testMachine, Tag = "Machine", State = TestMachineState.Disconnected });
+                string displayName;
+                displayNames.TryGetValue(testMachine, out displayName);
+                ClientsModel.Add(new TestMachine() { Name = testMachine, DisplayName = displayName, Tag = "Machine", State = TestMachineState.Disconnected });
             }
 
             this.TestMachinesModel = new ObservableCollectionWrapper<TestMachine>

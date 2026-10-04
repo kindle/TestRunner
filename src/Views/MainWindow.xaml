@@ -77,6 +77,7 @@
                         <Image Source="/Resources/TabTestCaseView.ico" Height="18" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="C_onfig Explorer" Click="MenuItemConfigExplorerClick" />
                 <!--<MenuItem Header="_Log Viewer" Click="MenuItemTestPassExplorerClick">
                     <MenuItem.Icon>
                         <Image Source="/Resources/TabTestPassView.ico" Height="18" />
@@ -172,7 +173,7 @@
                             <ContextMenu x:Key="SingleMachineContext" StaysOpen="true">
                                 <MenuItem Header="Connect machine" Click="ShowRemoteDesktop"/>
                                 <MenuItem Header="Disconnect machine" Click="DisconnectMachine"/>
-                                <MenuItem Header="Remove machine"/>
+                                <MenuItem Header="Remove machine" Click="RemoveMachine"/>
                                 <Separator/>
                                 <MenuItem Header="Full screen"/>
                             </ContextMenu>
@@ -182,7 +183,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <CheckBox IsChecked="{Binding IsChecked}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,3,0"></CheckBox>
                                     <Image Height="18" Source="{Binding State, Converter={StaticResource StringToBitmapImageConverter}, ConverterParameter=ClientTreeView}"></Image>
-                                    <TextBlock Text="{Binding Name}" Margin="5,0,5,0" VerticalAlignment="Center"></TextBlock>
+                                    <TextBlock Text="{Binding TreeName}" Margin="5,0,5,0" VerticalAlignment="Center"></TextBlock>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
@@ -363,6 +364,37 @@
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Config Explorer" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <DockPanel Background="{StaticResource TabItemTitleBackgroundBrushKey}" Grid.Row="0">
+                        <TextBlock Margin="3, 3, 5, 3" Foreground="White" DockPanel.Dock="Right">X</TextBlock>
+                        <TextBlock Margin="3, 3, 0, 3" Foreground="White" DockPanel.Dock="Left">Config Explorer</TextBlock>
+                    </DockPanel>
+                    <Grid x:Name="ConfigExplorerGrid" Grid.Row="1" Margin="5" VerticalAlignment="Top" Visibility="Collapsed" DataContext="{x:Null}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Display Name" Margin="0,3,10,3" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,3" Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" TextChanged="ConfigDisplayNameChanged" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Server Name" Margin="0,3,10,3" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,3" Text="{Binding Name, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" />
                     </Grid>
                 </Grid>
             </TabItem>

@@ -165,6 +165,26 @@ namespace TestRunner.ViewModels
         }
 
         /// <summary>
+        /// Remove a client machine from the list and local storage
+        /// </summary>
+        /// <param name="machineName">Machine name</param>
+        public void RemoveClientMachine(string machineName)
+        {
+            if (this.tcpServerHelper != null)
+            {
+                this.tcpServerHelper.BootClientMachine(machineName);
+            }
+
+            var machine = TestMachinesViewModel.ClientsModel.FirstOrDefault(m => m.Name == machineName);
+            if (machine != null)
+            {
+                TestMachinesViewModel.ClientsModel.Remove(machine);
+            }
+
+            TestMachineTreeViewHelper.RemoveMachine(machineName);
+        }
+
+        /// <summary>
         /// Dispose the tcp related objects
         /// </summary>
         public void Dispose()

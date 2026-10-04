@@ -57,6 +57,41 @@ namespace TestRunner.Models
             {
                 this.name = value; 
                 this.OnPropertyChanged("Name");
+                this.OnPropertyChanged("TreeName");
+            }
+        }
+
+        /// <summary>
+        /// Machine display name
+        /// </summary>
+        private string displayName;
+
+        /// <summary>
+        /// Gets or sets machine display name
+        /// </summary>
+        public string DisplayName
+        {
+            get
+            {
+                return this.displayName;
+            }
+
+            set
+            {
+                this.displayName = value;
+                this.OnPropertyChanged("DisplayName");
+                this.OnPropertyChanged("TreeName");
+            }
+        }
+
+        /// <summary>
+        /// Gets the name shown in the tree view
+        /// </summary>
+        public string TreeName
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.displayName) ? this.name : this.displayName;
             }
         }
 
